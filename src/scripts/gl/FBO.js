@@ -97,6 +97,7 @@ export default class FBO {
       let i3 = i * 3;
       vertices[i3 + 0] = (i % this.width) / this.width;
       vertices[i3 + 1] = i / this.width / this.height;
+      vertices[i3 + 2] = 0;
 
       // random color
       colors_data[i3 + 0] = Math.random();

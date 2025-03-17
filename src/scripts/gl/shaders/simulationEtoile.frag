@@ -6,9 +6,6 @@ uniform vec2 uMouse;
 uniform float uNumBranches;
 uniform float uBranchDepth;
 uniform float uSharpness;
-uniform float uBlobRadius;
-uniform float uBlobNoiseScale;
-uniform float uBlobNoiseAmount;
 varying vec2 vUv;
 
 #define PI 3.1415926538
@@ -123,37 +120,6 @@ vec3 createCone(vec3 pos, float height, float radius, vec3 offset) {
     return normalized * length(pos) * smoothstep(angle, angle - 0.1, acos(normalized.y)) + offset;
 }
 
-// Fonction helper pour le bruit 3D
-float random3D2(vec3 pos) {
-    return fract(sin(dot(pos.xyz, vec3(12.9898, 78.233, 45.5432))) * 43758.5453123);
-}
-
-vec3 createDesertRose(vec3 pos, float numPetals, float roughness, float scale, vec3 offset) {
-    pos -= offset;
-    
-    // Convertir en coordonnées sphériques
-    float radius = length(pos);
-    float theta = atan(pos.y, pos.x);
-    float phi = acos(pos.z / radius);
-    
-    // Créer la forme de base (pétales)
-    float petalPattern = abs(sin(numPetals * 0.5 * theta) * sin(numPetals * phi));
-    
-    // Ajouter de la variation aléatoire pour l'aspect cristallin
-    float noise = random3D2(pos * roughness);
-    petalPattern = pow(petalPattern, 1.0 + noise);
-    
-    // Moduler le rayon
-    float newRadius = radius * (0.5 + 0.5 * petalPattern) * scale;
-    
-    // Reconvertir en coordonnées cartésiennes
-    pos = normalize(pos) * newRadius;
-    
-    return pos + offset;
-}
-
-
-
 vec3 createCylinder(vec3 pos, float height, float radius, vec3 offset) {
     pos -= offset; // Déplacer le centre du cylindre
     vec2 xz = pos.xz;
@@ -180,48 +146,6 @@ vec3 combineShapes(vec3 pos) {
     return distToCone < distToCylinder ? cone : cylinder;
 }
 
-float map(float value, float a, float b, float c, float d) {
-    return c + (value - a) * (d - c) / (b - a);
-  }
-
-  float random(float n) {
-    return fract(sin(n) * 43758.5453123);
-}
-
-float random3D(vec3 pos) {
-    return fract(sin(dot(pos.xyz, vec3(12.9898, 78.233, 45.5432))) * 43758.5453123);
-}
-
-vec3 createFlatDisk(vec3 pos, float radius, float thickness) {
-    // Distance au plan XZ (hauteur)
-    float distToPlane = abs(pos.y);
-    
-    // Masque du disque (basé sur la distance au centre dans le plan XZ)
-    float diskMask = step(length(pos.xz), radius) * smoothstep(thickness, 0.0, distToPlane);
-    
-    // Appliquer la forme
-    return pos * (diskMask );
-}
-
-vec3 createBlobby(vec3 pos, float radius, float noiseScale, float noiseAmount) {
-    // Normaliser la position pour la forme de base
-    float dist = length(pos);
-    vec3 normalized = normalize(pos);
-    
-    // Créer plusieurs couches de bruit pour la déformation
-    float noise1 = noise(normalized * noiseScale);
-    float noise2 = noise(normalized * noiseScale * 2.0) * 0.5;
-    float noise3 = noise(normalized * noiseScale * 4.0) * 0.25;
-    
-    // Combiner les bruits pour créer une déformation organique
-    float totalNoise = (noise1 + noise2 + noise3) * noiseAmount;
-    
-    // Appliquer la déformation à la sphère de base
-    float newRadius = radius * (1.0 + totalNoise);
-    
-    return normalized * newRadius;
-}
-
 void main() {
   float t = uTime * 0.15 * uSpeed;
 
@@ -238,23 +162,16 @@ void main() {
   float distToMouse = length(toMouse);
   
   // Force d'attraction vers la souris
-  float mouseInfluence = smoothstep(2.0, 0.0, distToMouse) * 0.3; // Ajuster ces valeurs
-  // pos += normalize(toMouse) * mouseInfluence ;
+  float mouseInfluence = smoothstep(2.0, 0.0, distToMouse) * 0.5; // Ajuster ces valeurs
+  pos += normalize(toMouse) * mouseInfluence * uSpeed;
 
-  // pos = normalize(pos);
+  pos = normalize(pos);
 
 //   pos = slideOnSurface(pos, t);
   
   // Utiliser la fonction de combinaison
   // pos = combineShapes(pos);
-  pos=curl(pos * 2.0 * uCurlFreq + t);
-  cubepos=curl(cubepos * 2.0 * uCurlFreq + t);
-
-  // pos += normalize(toMouse) * mouseInfluence ;
-  // cubepos += normalize(toMouse) * mouseInfluence ;
-  // pos += curl(curlPos * uCurlFreq * 2.0) * 1.0; 
-  // pos += curl(curlPos * uCurlFreq * 4.0) * 0.25; 
-  // cubepos = curl(cubepos * uCurlFreq + t);
+//   cubepos = curl(cubepos * uCurlFreq + t);
   // cubepos = normalize(cubepos) * length(pos);
 //   float repulsionRadius = 0.1;
 //   float repulsionStrength = 0.05;
@@ -266,11 +183,8 @@ void main() {
   // cubepos += curl(cubepos * uCurlFreq * 2.0) * 0.5;    // Plus haute fréquence
   // cubepos += curl(cubepos * uCurlFreq * 4.0) * 0.25;   // Encore plus haute fréquence
 
-  // cubepos = sphereToStar(cubepos, uNumBranches, uBranchDepth, uSharpness);
+  cubepos = sphereToStar(cubepos, uNumBranches, uBranchDepth, uSharpness);
   
-  // cubepos = createDesertRose(cubepos, 10.0, 0.1, 1.0, vec3(0.0));
-  // cubepos = createFlatDisk(cubepos, 1.0, 0.1);
-  cubepos = createBlobby(cubepos, 1.0, 3.0, 0.5);
   // Move the particles here
   // pos = rotate(pos, vec3(0.0, 0.0, 1.0), t + sin(length(pos.xy) * 2.0 + PI * 0.5) * 10.0);
   // pos = rotate(pos, vec3(1.0, 0.0, 0.0), -t);
@@ -288,24 +202,31 @@ void main() {
 
   float smoothness = 0.3;  // Plus petit = transitions plus abruptes
 //   float wave = smoothSquareWave(3.0*t, smoothness);
-  if (uTime < 1.0) {
-    pos = mix(pos*0.5, pos*(4.0 +3.0 *random3D(pos)), 1.0 - uTime);
-  }
+  
+  finalPos = mix(pos, cubepos, abs(sin(t*4.0)));
+  finalPos = finalPos + normalize(toMouse) * mouseInfluence;
+  // abs(sin(t*2.0))*noise(pos + t)
+  // Add speed clamping
+  // vec3 displacement = finalPos - pos;
+  // float maxSpeed = uSpeed/3.; // Adjust this value to control max speed
+  // if(length(displacement) > maxSpeed) {
+  //     displacement = normalize(displacement) * maxSpeed;
+  // }
+  // finalPos = pos + displacement/ 3.;
 
-  // float animationProgress = clamp((uTime - 1.0) / 2.0, 0.0, 1.0);
+  // Solution 1: Ajouter plusieurs fréquences de curl
   
   
-
-  if (uTime > 1.0 && uTime < 3.0) {
-    pos = mix(pos*0.5, pos*1.0, map(uTime, 1.0, 3.0, 0.0, 1.0));
-  }
-
-    
-
-  finalPos = mix(pos, cubepos, abs(sin((t+4.0)*4.0)));
-  // finalPos = pos ;
-  // finalPos= pos + normalize(toMouse) * mouseInfluence;
- 
+  
+  // Solution 2: Ajouter une force de répulsion entre les points proches
+  // float repulsionRadius = 0.1;
+  // float repulsionStrength = 0.05;
+  // vec3 repulsion = normalize(pos) * repulsionStrength * 
+  //                  (1.0 - smoothstep(0.0, repulsionRadius, length(pos)));
+  // curlPos += repulsion;
+  
+  // Solution 3: Renormaliser périodiquement pour redistribuer sur la surface
+  // curlPos = normalize(curlPos) * length(pos);
 
   gl_FragColor = vec4(finalPos, 1.0);
 }

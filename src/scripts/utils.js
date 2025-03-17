@@ -6,8 +6,8 @@ export function getRandomSpherePoint() {
   const v = Math.random();
 
   const theta = u * 2.0 * Math.PI;
-  const phi = Math.acos(2.0 * v - 1.0);
-  const r = Math.cbrt(Math.random());
+  const phi = Math.acos(-1 + (2 * v));
+  const r = Math.pow(Math.random(), 1/3);
 
   const sinTheta = Math.sin(theta);
   const cosTheta = Math.cos(theta);
