@@ -117,48 +117,48 @@ const RippleShaderMaterial = () => {
     [WAVE_SPEED, WAVE_LIFETIME, WAVE_SPREAD] // Dépendances pour useMemo
   )
 
-  // useFrame(() => {
-  //   console.log('useFrame')
-  //   if (materialRef.current) {
-  //     const elapsedTime = (Date.now() - startTimeRef.current) / 1000
-  //     materialRef.current.uniforms.uTime.value = elapsedTime
-  //     materialRef.current.uniforms.uClickTimes.value = new Float32Array(
-  //       clicksRef.current.map(click => click.time)
-  //     )
-  //   }
-  // })
+  useFrame(() => {
+    // console.log('useFrame')
+    if (materialRef.current) {
+      const elapsedTime = (Date.now() - startTimeRef.current) / 1000
+      materialRef.current.uniforms.uTime.value = elapsedTime
+      materialRef.current.uniforms.uClickTimes.value = new Float32Array(
+        clicksRef.current.map(click => click.time)
+      )
+    }
+  })
 
-  // const handleMouseMove = (event: MouseEvent) => {
-  //   const currentTime = Date.now()
-  //   if (currentTime - lastMoveTime.current > moveThreshold) {
-  //     const x = event.clientX / window.innerWidth
-  //     const y = 1.0 - event.clientY / window.innerHeight
-  //     const currentTimeInSeconds = (currentTime - startTimeRef.current) / 1000
+  const handleMouseMove = (event: MouseEvent) => {
+    const currentTime = Date.now()
+    if (currentTime - lastMoveTime.current > moveThreshold) {
+      const x = event.clientX / window.innerWidth
+      const y = 1.0 - event.clientY / window.innerHeight
+      const currentTimeInSeconds = (currentTime - startTimeRef.current) / 1000
       
-  //     clicksRef.current[clickIndexRef.current] = {
-  //       position: new Vector2(x, y),
-  //       time: currentTimeInSeconds
-  //     }
+      clicksRef.current[clickIndexRef.current] = {
+        position: new Vector2(x, y),
+        time: currentTimeInSeconds
+      }
 
-  //     if (materialRef.current) {
-  //       // Mise à jour des positions
-  //       const positions = materialRef.current.uniforms.uClicks.value
-  //       positions[clickIndexRef.current].set(x, y)
+      if (materialRef.current) {
+        // Mise à jour des positions
+        const positions = materialRef.current.uniforms.uClicks.value
+        positions[clickIndexRef.current].set(x, y)
         
-  //       // Mise à jour des temps
-  //       const times = new Float32Array(clicksRef.current.map(click => click.time))
-  //       materialRef.current.uniforms.uClickTimes.value = times
-  //     }
+        // Mise à jour des temps
+        const times = new Float32Array(clicksRef.current.map(click => click.time))
+        materialRef.current.uniforms.uClickTimes.value = times
+      }
       
-  //     clickIndexRef.current = (clickIndexRef.current + 1) % 10
-  //     lastMoveTime.current = currentTime
-  //   }
-  // }
+      clickIndexRef.current = (clickIndexRef.current + 1) % 10
+      lastMoveTime.current = currentTime
+    }
+  }
 
-  // useEffect(() => {
-  //   window.addEventListener('mousemove', handleMouseMove)
-  //   return () => window.removeEventListener('mousemove', handleMouseMove)
-  // }, [])
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
   return (
     <mesh>
@@ -185,7 +185,7 @@ const RippleShaderFiber = ({ animate }: { animate: boolean }) => {
           far: 1000,
         }}
       >
-        {/* <RippleShaderMaterial /> */}
+        <RippleShaderMaterial />
       </Canvas>
     </div>
   )

@@ -10,7 +10,6 @@ import {
   createScreen4Triggers,
   createScreen5Triggers,
 } from "./ScrollTriggers/ScreenTriggers";
-// import { getDistanceFromTop } from "./utils/utils";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
@@ -21,7 +20,7 @@ export const Screen3 = React.memo(() => {
   const [val4, setVal4] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isGsapReady, setIsGsapReady] = useState(false);
-  const gsapModules = useRef<any>({});
+  // const gsapModules = useRef<any>({});
 
   useGSAP(() => {
     setIsGsapReady(true);
@@ -66,15 +65,14 @@ export const Screen3 = React.memo(() => {
   useGSAP(() => {
     if (!isGsapReady) return;
 
-    const triggers = createScreen3Triggers({
-      gsap,
-      ScrollTrigger,
-      setIsVisible,
-    });
+    // const triggers = createScreen3Triggers({
+    //   gsap,
+    //   ScrollTrigger,
+    //   setIsVisible,
+    // });
 
     return () => {
-      triggers.scrollTrigger.kill();
-      triggers.mainTriggerUp.kill();
+      // triggers.mainSnap.kill();
     };
   }, [isGsapReady]);
 
@@ -84,30 +82,7 @@ export const Screen3 = React.memo(() => {
       // className="w-full h-screen bg-orange  text-white flex items-center justify-center font-['Prompt'] z-20"
       className="relative  sm:mx-[var(--margeBodySectionsm)]  h-screen text-white flex justify-center z-0"
     >
-      {/* <div className="flex flex-col w-1/4 flex items-center justify-center">
-        <span className="text-4xl text-center font-bold xl:text-6xl">
-          +{val1}
-        </span>
-        <span className="pt-2  text-base text-center xl:text-2xl">
-          years experience
-        </span>
-      </div>
-      <div className="flex flex-col w-1/4  flex items-center justify-center">
-        <span className="text-4xl text-center font-bold xl:text-6xl">
-          +{val2}
-        </span>
-        <span className="pt-2 text-base text-center xl:text-2xl">projects</span>
-      </div>
-
-      <div className="flex text-2xl xl:text-2xl w-1/4  flex flex-col items-center justify-center">
-        <span className="text-4xl text-center font-bold xl:text-6xl">
-          {val3}
-        </span>
-        <span className="pt-2 text-base text-center xl:text-2xl">
-          continents
-        </span>
-      </div> */}
-      {/* <div className="max-w-screen-lg"> */}
+    
         <div className="flex w-1/3 sm:w-1/4">
           <div className="relative w-full h-full">
             <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
@@ -156,7 +131,6 @@ export const Screen3 = React.memo(() => {
               </span>
             </div>
           </div>
-        {/* </div> */}
       </div>
     </div>
   );
@@ -179,7 +153,7 @@ export const Screen4 = () => {
     });
 
     return () => {
-      triggers.mainTriggerDown.kill();
+      triggers.mainSnap.kill();
     };
   }, [isGsapReady]);
 
@@ -226,8 +200,7 @@ export const Screen5 = () => {
     });
 
     return () => {
-      triggers.mainTriggerDown.kill();
-      triggers.mainTriggerUp.kill();
+      triggers.mainSnap.kill();
     };
   }, [isGsapReady]);
 

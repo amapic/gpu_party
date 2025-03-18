@@ -15,19 +15,19 @@ const Screen2 = () => {
   const sectionsRef = useRef<HTMLDivElement[]>([]);
   const numbersRef = useRef<HTMLDivElement[]>([]);
   const bottomBarRef = useRef<HTMLDivElement>(null);
-  const lastTriggerTime = useRef<number>(0);
-  const TRIGGER_COOLDOWN = 1000;
+  // const lastTriggerTime = useRef<number>(0);
+  // const TRIGGER_COOLDOWN = 1000;
 
   const AnimationClipCreator = useRef(false);
 
-  const canTrigger = () => {
-    const now = Date.now();
-    if (now - lastTriggerTime.current >= TRIGGER_COOLDOWN) {
-      lastTriggerTime.current = now;
-      return true;
-    }
-    return false;
-  };
+  // const canTrigger = () => {
+  //   const now = Date.now();
+  //   if (now - lastTriggerTime.current >= TRIGGER_COOLDOWN) {
+  //     lastTriggerTime.current = now;
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   useEffect(() => {
     setIsGsapReady(true);
@@ -49,10 +49,8 @@ const Screen2 = () => {
     });
 
     return () => {
-      triggers.mainTriggerAnimLocal.kill();
-      triggers.mainTriggerUp.kill();
-      triggers.mainTriggerDown.kill();
-      triggers.mainTriggerOwnCenter.kill();
+ 
+      triggers.mainSnap.kill();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [isGsapReady]);

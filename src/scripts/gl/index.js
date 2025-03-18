@@ -1,32 +1,34 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as THREE from "three-gl";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import { Events } from '../events';
+import { Events } from "../events";
 
-import store from '../store';
+import store from "../store";
 
-import FBO from './FBO';
+import FBO from "./FBO";
 
-import simVertex from './shaders/simulation.vert';
-import simFragment from './shaders/simulation.frag';
-import particlesVertex from './shaders/particles.vert';
-import particlesFragment from './shaders/particles.frag';
-import fullScreenVertex from './shaders/fullscreen.vert';
-import fullScreenFragment from './shaders/fullscreen.frag';
+import simVertex from "./shaders/simulation.vert";
+import simFragment from "./shaders/simulation.frag";
+import particlesVertex from "./shaders/particles.vert";
+import particlesFragment from "./shaders/particles.frag";
+import fullScreenVertex from "./shaders/fullscreen.vert";
+import fullScreenFragment from "./shaders/fullscreen.frag";
 
-import { getRandomSpherePoint } from '../utils';
+import { getRandomSpherePoint } from "../utils";
 
-import GUI from '../gui';
+import GUI from "../gui";
 
-export default new class {
+export default new (class {
   constructor() {
-    this.renderer = new THREE.WebGL1Renderer({ 
-      antialias: true, 
-      alpha: true, 
+    this.renderer = new THREE.WebGL1Renderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "default",
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.setSize(store.bounds.ww, store.bounds.wh);
-    this.renderer.setClearColor(0x161616, 1);
+    // this.renderer.setClearColor(0x161616, 1);
+    this.renderer.setClearColor("#131313", 1);
 
     this.camera = new THREE.PerspectiveCamera(
       45,
@@ -49,36 +51,36 @@ export default new class {
     this.mouse = new THREE.Vector2(0, 0);
     this.mouseTarget = new THREE.Vector2(0, 0);
 
-    this.zoomDisplay = document.createElement('div');
-    this.zoomDisplay.style.position = 'fixed';
-    this.zoomDisplay.style.top = '10px';
-    this.zoomDisplay.style.left = '10px';
-    this.zoomDisplay.style.color = 'white';
-    this.zoomDisplay.style.fontFamily = 'monospace';
+    this.zoomDisplay = document.createElement("div");
+    this.zoomDisplay.style.position = "fixed";
+    this.zoomDisplay.style.top = "10px";
+    this.zoomDisplay.style.left = "10px";
+    this.zoomDisplay.style.color = "white";
+    this.zoomDisplay.style.fontFamily = "monospace";
     document.body.appendChild(this.zoomDisplay);
 
-    this.mouseDisplay = document.createElement('div');
-    this.mouseDisplay.style.position = 'fixed';
-    this.mouseDisplay.style.top = '40px';
-    this.mouseDisplay.style.left = '10px';
-    this.mouseDisplay.style.color = 'white';
-    this.mouseDisplay.style.fontFamily = 'monospace';
-    this.mouseDisplay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    this.mouseDisplay.style.padding = '5px 10px';
-    this.mouseDisplay.style.borderRadius = '3px';
+    this.mouseDisplay = document.createElement("div");
+    this.mouseDisplay.style.position = "fixed";
+    this.mouseDisplay.style.top = "40px";
+    this.mouseDisplay.style.left = "10px";
+    this.mouseDisplay.style.color = "white";
+    this.mouseDisplay.style.fontFamily = "monospace";
+    this.mouseDisplay.style.backgroundColor = "rgba(0,0,0,0.5)";
+    this.mouseDisplay.style.padding = "5px 10px";
+    this.mouseDisplay.style.borderRadius = "3px";
     document.body.appendChild(this.mouseDisplay);
 
     // Configuration du zoom
     this.zoomConfig = {
-        min: 1,
-        max: 4,
-        current: 4,
-        smooth: 0.1
+      min: 1,
+      max: 4,
+      current: 4,
+      smooth: 0.1,
     };
-    
+
     // Initialiser la caméra avec le zoom de départ
     this.camera.position.z = this.zoomConfig.current;
-    
+
     // Écouter le scroll
     this.setupScroll();
 
@@ -95,15 +97,15 @@ export default new class {
 
   addCanvas() {
     this.canvas = this.renderer.domElement;
-    this.canvas.classList.add('webgl');
+    this.canvas.classList.add("webgl");
     document.body.appendChild(this.canvas);
   }
 
   addEvents() {
-    Events.on('tick', this.render.bind(this));
-    Events.on('resize', this.resize.bind(this));
-    
-    window.addEventListener('mousemove', (e) => {
+    Events.on("tick", this.render.bind(this));
+    Events.on("resize", this.resize.bind(this));
+
+    window.addEventListener("mousemove", (e) => {
       this.mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
       this.mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
     });
@@ -120,56 +122,64 @@ export default new class {
       sharpness: 100.0,
       slideSpeedX: 0,
       slideSpeedY: 0,
-      zoom: 0
+      zoom: 0,
     };
 
-    GUI.add(this.tweaks, 'pointSize', 1, 3, 0.1)
-       .name('particle size')
-       .onChange(() => this.renderMaterial.uniforms.uPointSize.value = this.tweaks.pointSize);
+    GUI.add(this.tweaks, "pointSize", 1, 3, 0.1)
+      .name("particle size")
+      .onChange(
+        () =>
+          (this.renderMaterial.uniforms.uPointSize.value =
+            this.tweaks.pointSize)
+      );
 
-    GUI.add(this.tweaks, 'speed', 0.0, 1, 0.001)
-       .onChange(() => this.simMaterial.uniforms.uSpeed.value = this.tweaks.speed);
+    GUI.add(this.tweaks, "speed", 0.0, 1, 0.001).onChange(
+      () => (this.simMaterial.uniforms.uSpeed.value = this.tweaks.speed)
+    );
 
-    GUI.add(this.tweaks, 'curlFreq', 0, 0.6, 0.01)
-       .name('noise frequency')
-       .onChange(() => this.simMaterial.uniforms.uCurlFreq.value = this.tweaks.curlFreq);
+    GUI.add(this.tweaks, "curlFreq", 0, 0.6, 0.01)
+      .name("noise frequency")
+      .onChange(
+        () => (this.simMaterial.uniforms.uCurlFreq.value = this.tweaks.curlFreq)
+      );
 
-    GUI.add(this.tweaks, 'opacity', 0.1, 1.0, 0.01)
-       .onChange(() => this.renderMaterial.uniforms.uOpacity.value = this.tweaks.opacity);
+    GUI.add(this.tweaks, "opacity", 0.1, 1.0, 0.01).onChange(
+      () => (this.renderMaterial.uniforms.uOpacity.value = this.tweaks.opacity)
+    );
 
-    GUI.add(this.tweaks, 'numBranches', 3, 12, 1)
-       .name('Star Branches')
-       .onChange(() => {
-           this.simMaterial.uniforms.uNumBranches.value = this.tweaks.numBranches;
-       });
-       
-    GUI.add(this.tweaks, 'branchDepth', 0, 1, 0.01)
-       .name('Branch Depth')
-       .onChange(() => {
-           this.simMaterial.uniforms.uBranchDepth.value = this.tweaks.branchDepth;
-       });
+    GUI.add(this.tweaks, "numBranches", 3, 12, 1)
+      .name("Star Branches")
+      .onChange(() => {
+        this.simMaterial.uniforms.uNumBranches.value = this.tweaks.numBranches;
+      });
 
-    GUI.add(this.tweaks, 'sharpness', 0.5, 100, 0.1)
-       .name('Point Sharpness')
-       .onChange(() => {
-           this.simMaterial.uniforms.uSharpness.value = this.tweaks.sharpness;
-       });
+    GUI.add(this.tweaks, "branchDepth", 0, 1, 0.01)
+      .name("Branch Depth")
+      .onChange(() => {
+        this.simMaterial.uniforms.uBranchDepth.value = this.tweaks.branchDepth;
+      });
 
-    GUI.add(this.tweaks, 'slideSpeedX', 0, 2, 0.1)
-       .name('Slide Speed X')
-       .onChange(() => {
-           this.simMaterial.uniforms.uSlideSpeedX.value = this.tweaks.slideSpeedX;
-       });
-       
-    GUI.add(this.tweaks, 'slideSpeedY', 0, 2, 0.1)
-       .name('Slide Speed Y')
-       .onChange(() => {
-           this.simMaterial.uniforms.uSlideSpeedY.value = this.tweaks.slideSpeedY;
-       });
+    GUI.add(this.tweaks, "sharpness", 0.5, 100, 0.1)
+      .name("Point Sharpness")
+      .onChange(() => {
+        this.simMaterial.uniforms.uSharpness.value = this.tweaks.sharpness;
+      });
 
-    const zoomController = GUI.add(this.tweaks, 'zoom')
-        .name('Camera Zoom')
-        .listen();
+    GUI.add(this.tweaks, "slideSpeedX", 0, 2, 0.1)
+      .name("Slide Speed X")
+      .onChange(() => {
+        this.simMaterial.uniforms.uSlideSpeedX.value = this.tweaks.slideSpeedX;
+      });
+
+    GUI.add(this.tweaks, "slideSpeedY", 0, 2, 0.1)
+      .name("Slide Speed Y")
+      .onChange(() => {
+        this.simMaterial.uniforms.uSlideSpeedY.value = this.tweaks.slideSpeedY;
+      });
+
+    const zoomController = GUI.add(this.tweaks, "zoom")
+      .name("Camera Zoom")
+      .listen();
   }
 
   createFBO() {
@@ -185,17 +195,23 @@ export default new class {
       const point = getRandomSpherePoint();
       data[i + 0] = point.x;
       data[i + 1] = point.y;
-      data[i + 2] = point.z;      
+      data[i + 2] = point.z;
 
-      // // Replaced with this if you want 
+      // // Replaced with this if you want
       // // random positions inside a cube
       // data[i + 0] = Math.random() - 0.5;
       // data[i + 1] = Math.random() - 0.5;
-      // data[i + 2] = Math.random() - 0.5;      
+      // data[i + 2] = Math.random() - 0.5;
     }
 
     // Convert the data to a FloatTexture
-    const positions = new THREE.DataTexture(data, width, height, THREE.RGBFormat, THREE.FloatType);
+    const positions = new THREE.DataTexture(
+      data,
+      width,
+      height,
+      THREE.RGBFormat,
+      THREE.FloatType
+    );
     positions.needsUpdate = true;
 
     // Simulation shader material used to update the particles' positions
@@ -212,7 +228,7 @@ export default new class {
         uBranchDepth: { value: this.tweaks.branchDepth },
         uSharpness: { value: 2.0 },
         uSlideSpeedX: { value: this.tweaks.slideSpeedX },
-        uSlideSpeedY: { value: this.tweaks.slideSpeedY }
+        uSlideSpeedY: { value: this.tweaks.slideSpeedY },
       },
     });
 
@@ -226,14 +242,20 @@ export default new class {
         uTime: { value: 0 },
         uPointSize: { value: this.tweaks.pointSize },
         uOpacity: { value: this.tweaks.opacity },
-        uMouse: { value: this.mouse }
+        uMouse: { value: this.mouse },
       },
       transparent: true,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
     });
 
     // Initialize the FBO
-    this.fbo = new FBO(width, height, this.renderer, this.simMaterial, this.renderMaterial);
+    this.fbo = new FBO(
+      width,
+      height,
+      this.renderer,
+      this.simMaterial,
+      this.renderMaterial
+    );
     // Add the particles to the scene
     this.scene.add(this.fbo.particles);
   }
@@ -245,11 +267,13 @@ export default new class {
       fragmentShader: fullScreenFragment,
       uniforms: {
         uTime: { value: 0 },
-        uResolution: { value: new THREE.Vector2(store.bounds.ww, store.bounds.wh) },
-		uMouse: { value: this.mouse }
+        uResolution: {
+          value: new THREE.Vector2(store.bounds.ww, store.bounds.wh),
+        },
+        uMouse: { value: this.mouse },
       },
       depthTest: false,
-      blending: THREE.AdditiveBlending      
+      blending: THREE.AdditiveBlending,
     });
 
     this.fullScreenQuad = new THREE.Mesh(geometry, material);
@@ -271,17 +295,19 @@ export default new class {
 
   setupScroll() {
     // Calculer la hauteur totale scrollable
-    const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-    
-    window.addEventListener('scroll', () => {
-        // Convertir le scroll en valeur de zoom
-        const scrollRatio = window.pageYOffset / totalScroll;
-        const targetZoom = this.zoomConfig.min + 
-            (this.zoomConfig.max - this.zoomConfig.min) * scrollRatio;
-            
-        // Mettre à jour la cible de zoom
-        this.zoomConfig.current = targetZoom;
-    });
+    const totalScroll =
+      document.documentElement.scrollHeight - window.innerHeight;
+
+    // window.addEventListener("scroll", () => {
+    //   // Convertir le scroll en valeur de zoom
+    //   const scrollRatio = window.pageYOffset / totalScroll;
+    //   const targetZoom =
+    //     this.zoomConfig.min +
+    //     (this.zoomConfig.max - this.zoomConfig.min) * scrollRatio;
+
+    //   // Mettre à jour la cible de zoom
+    //   this.zoomConfig.current = targetZoom;
+    // });
   }
 
   render() {
@@ -309,7 +335,7 @@ export default new class {
     const currentZ = this.camera.position.z;
     const targetZ = this.zoomConfig.current;
     this.camera.position.z += (targetZ - currentZ) * this.zoomConfig.smooth;
-
+    // console.log("rr");
     this.renderer.render(this.scene, this.camera);
   }
-}
+})();

@@ -31,7 +31,9 @@
     "parcel-bundler": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "three": "^0.136.0",
+    "serve-static": "^1.16.2",
+    "three": "0.161.0",
+    "three-gl": "npm:three@0.136.0",
     "tiny-emitter": "latest"
   },
   "devDependencies": {

@@ -20,22 +20,7 @@ const useIsMobile = () => {
 
 export default function Interstitial() {
   const isMobile = useIsMobile();
-  // const [isGsapReady, setIsGsapReady] = useState(false);
-  // const gsapModules = useRef<any>({});
-
-  // const ref = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   Promise.all([
-  //     import("gsap").then((mod) => mod.default),
-  //     import("gsap/dist/ScrollTrigger").then((mod) => mod.ScrollTrigger),
-  //     import("gsap/ScrollToPlugin").then((mod) => mod.ScrollToPlugin),
-  //   ]).then(([gsap, ScrollTrigger, ScrollToPlugin]) => {
-  //     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-  //     gsapModules.current = { gsap, ScrollTrigger, ScrollToPlugin };
-  //     setIsGsapReady(true);
-  //   });
-  // }, []);
+  
 
   return (
     <>

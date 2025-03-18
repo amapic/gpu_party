@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+:root {
+  --margeBodySectionsm: 8rem;
+  --margeBodySection: 4rem;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -12,9 +18,20 @@
 
 body {
   font-family: 'Prompt', sans-serif;
+
 }
 
-canvas {
+html, body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+::-webkit-scrollbar {
+  display: none;
+} 
+
+.webgl {
   position: fixed;
   top: 0;
   left: 0;
@@ -187,4 +204,9 @@ canvas {
   transform: scaleY(1.0); /* Compresse horizontalement le texte */
   transform-origin: left center; /* Garde l'alignement à gauche */
 }
+
+/* fond de l'anim principale*/
+/* #canvas {
+  background-color:rgb(16,16,16,);
+} */
 

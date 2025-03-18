@@ -5,51 +5,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
-import { getDistanceFromTop } from "./utils/utils";
 import RippleShader from "./RippleShader";
-
+import { createScreen6Triggers } from "./ScrollTriggers/ScreenTriggers";
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
-class DomUtils {
-  // left: 37, up: 38, right: 39, down: 40,
-  // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
-  static keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
-
-  static preventDefault(e: any) {
-    e = e || window.event;
-    if (e.preventDefault) e.preventDefault();
-    e.returnValue = false;
-  }
-
-  static preventDefaultForScrollKeys(e: any) {
-    if (DomUtils.keys[e.keyCode]) {
-      DomUtils.preventDefault(e);
-      return false;
-    }
-  }
-
-  static disableScroll() {
-    document.addEventListener("wheel", DomUtils.preventDefault, {
-      passive: false,
-    }); // Disable scrolling in Chrome
-    document.addEventListener("keydown", DomUtils.preventDefaultForScrollKeys, {
-      passive: false,
-    });
-  }
-
-  static enableScroll() {
-    document.removeEventListener("wheel", DomUtils.preventDefault, {
-      passive: false,
-    }); // Enable scrolling in Chrome
-    document.removeEventListener(
-      "keydown",
-      DomUtils.preventDefaultForScrollKeys,
-      {
-        passive: false,
-      }
-    ); // Enable scrolling in Chrome
-  }
-}
 
 interface Screen6Props {
   setAnimateCanvas1: (value: boolean) => void;
@@ -70,9 +29,12 @@ export const Screen6ClientsEtPartners = ({
     if (!isGsapReady) return;
 
     const element = document.querySelector("#screen6");
-    const elementAfter = document.querySelector("#screen6");
-    const elementBefore = document.querySelector("#screen5");
 
+    const triggers = createScreen6Triggers({
+      gsap,
+      ScrollTrigger
+    });
+    
     const triggerAnimateCanvas2 = ScrollTrigger.create({
       trigger: document.querySelector("#screen6"),
       start: "top 100%",
@@ -89,56 +51,18 @@ export const Screen6ClientsEtPartners = ({
       start: "bottom 100%",
       end: "bottom 100%",
       onEnter: () => {
-        setAnimateCanvas1(false);
+        // setAnimateCanvas1(false);
       },
       onLeaveBack: () => {
-        setAnimateCanvas1(true);
+        // setAnimateCanvas1(true);
         setAnimateCanvas2(false);
       },
     });
 
-    const mainTriggerDown = ScrollTrigger.create({
-      trigger: element,
-      start: "bottom 95%",
-      end: "bottom 95%",
-      onEnter: () => {
-        DomUtils.disableScroll();
-        gsap.to(window, {
-          scrollTo: {
-            y: getDistanceFromTop(elementAfter as HTMLElement),
-            ease: "power2.inOut",
-          },
-          duration: 1,
-          onComplete: () => {
-            document.body.style.overflow = "";
-            DomUtils.enableScroll();
-          },
-        });
-      },
-    });
-
-    const mainTriggerUp = ScrollTrigger.create({
-      trigger: element,
-      start: "top 5%",
-      end: "top 5%",
-      onEnterBack: () => {
-        DomUtils.disableScroll();
-        gsap.to(window, {
-          scrollTo: {
-            y: getDistanceFromTop(elementBefore as HTMLElement),
-            ease: "power2.inOut",
-          },
-          duration: 1,
-          onComplete: () => {
-            DomUtils.enableScroll();
-          },
-        });
-      },
-    });
+    
 
     return () => {
-      mainTriggerDown.kill();
-      mainTriggerUp.kill();
+      triggers.mainSnap.kill();
       triggerAnimateCanvas1.kill();
       triggerAnimateCanvas2.kill();
     };
@@ -150,7 +74,7 @@ export const Screen6ClientsEtPartners = ({
       id="screen6"
       className="relative w-full min-h-screen bg-[rgb(16,16,16)] text-white overflow-hidden z-0"
     >
-      {/* <RippleShader animate={animateCanvas2} /> */}
+      <RippleShader animate={animateCanvas2} />
       <div
         className="absolute px-[var(--margeBodySection)] sm:px-[var(--margeBodySectionsm)] sm:top-1/3 mt-48 sm:mt-32 sm:h-1/3 
         gap-1
@@ -165,168 +89,168 @@ export const Screen6ClientsEtPartners = ({
       >
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/airfrance.png"
+            src="./public/airfrance.png"
             alt="Air France"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/renault.png"
+            src="./public/renault.png"
             alt="Renault"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/total.png"
+            src="./public/total.png"
             alt="Total Energies"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/as24.png"
+            src="./public/as24.png"
             alt="AS 24"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/lcl.png"
+            src="./public/lcl.png"
             alt="LCL"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/mastercard.png"
+            src="./public/mastercard.png"
             alt="Mastercard"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/kesato.webp"
+            src="./public/kesato.webp"
             alt="Kesato"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/imani.png"
+            src="./public/imani.png"
             alt="IMANI"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/aldiwan.png"
+            src="./public/aldiwan.png"
             alt="Aldiwan"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/cafe.jpeg"
+            src="./public/cafe.jpeg"
             alt="Cafe Organic"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12p-1">
           <img
-            src="/ts.svg"
+            src="./public/ts.svg"
             alt="touch et sell"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/celio.png"
+            src="./public/celio.png"
             alt="celio"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/comptoir.jpeg"
+            src="./public/comptoir.jpeg"
             alt="Comptoir"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/yacht.png"
+            src="./public/yacht.png"
             alt="Yacht"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/dubai.png"
+            src="./public/dubai.png"
             alt="Dubai"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/bsi.png"
+            src="./public/bsi.png"
             alt="BSI"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/neonautica.webp"
+            src="./public/neonautica.webp"
             alt="Neonautica"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/HR.png"
+            src="./public/HR.png"
             alt="HR"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/ericbompard.png"
+            src="./public/ericbompard.png"
             alt="Eric Bompard"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/princessetam.png"
+            src="./public/princessetam.png"
             alt="Princess Etam"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/facebook.png"
+            src="./public/facebook.png"
             alt="Facebook"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/gsuite.png"
+            src="./public/gsuite.png"
             alt="GSuite"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="/googleana.png"
+            src="./public/googleana.png"
             alt="Google Analytics"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="miro.png"
+            src="./public/miro.png"
             alt="Miro"
             className="h-full w-auto object-contain"
           />

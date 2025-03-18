@@ -18,8 +18,6 @@ import { useRef, useState, useEffect, memo, useMemo } from "react";
 
 
 import '../styles/index.css';
-import Screen2 from './Screen2';
-import { Screen3, Screen4, Screen5 } from './Screen345';
 
 
 
@@ -30,7 +28,6 @@ function App() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // DomUtils.enableScroll();
 
   }, []);
 
@@ -39,7 +36,7 @@ function App() {
   return (
     <div className={`content`}>
       {/* <WaitingScreen setSceneLoaded={setSceneLoaded}/> */}
-      {/* {!sceneLoaded && <WaitingScreen setSceneLoaded={setSceneLoaded} />} */}
+      {!sceneLoaded && <WaitingScreen setSceneLoaded={setSceneLoaded} />}
       {/* <Scene param={paramScene} setSceneLoaded={setSceneLoaded} animateCanvas1={animateCanvas1} /> */}
       {/* <CustomGeometryParticles  /> */}
       {/* {sceneLoaded && <Menu /> } */}
