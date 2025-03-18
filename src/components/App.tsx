@@ -40,8 +40,8 @@ function App() {
       {/* <Scene param={paramScene} setSceneLoaded={setSceneLoaded} animateCanvas1={animateCanvas1} /> */}
       {/* <CustomGeometryParticles  /> */}
       {/* {sceneLoaded && <Menu /> } */}
-      <Menu />
-      <Hero />
+      {/* <Menu /> */}
+      {/* <Hero /> */}
       <Screen2 /> 
        <Screen3 />
       <Interstitial />

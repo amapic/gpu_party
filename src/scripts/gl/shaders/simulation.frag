@@ -9,12 +9,18 @@ uniform float uSharpness;
 uniform float uBlobRadius;
 uniform float uBlobNoiseScale;
 uniform float uBlobNoiseAmount;
+uniform float uRotationTorus;
+// uniform float uRotationTorus2;
 varying vec2 vUv;
 
 #define PI 3.1415926538
 
 #pragma glslify: curl = require(glsl-curl-noise)
 #pragma glslify: noise = require(glsl-noise/classic/3d)
+
+float random(float n) {
+    return fract(sin(n) * 43758.5453123);
+}
 
 mat4 rotation3d(vec3 axis, float angle) {
   axis = normalize(axis);
@@ -152,6 +158,25 @@ vec3 createDesertRose(vec3 pos, float numPetals, float roughness, float scale, v
     return pos + offset;
 }
 
+vec3 createFlow(vec3 pos, float time, float speed) {
+    // Déplacement de base de droite à gauche
+    pos.x -= time * speed;
+    
+    // Réinitialiser la position quand les particules vont trop à gauche
+    if (pos.x < -2.0) {
+        pos.x = 2.0;
+        // Ajouter un peu de variation aléatoire en y et z
+        pos.y += (random(pos.x + pos.y) - 0.5) * 0.5;
+        pos.z += (random(pos.x + pos.z) - 0.5) * 0.5;
+    }
+    
+    // Ajouter un peu de mouvement ondulant
+    pos.y += sin(time + pos.x * 2.0) * 0.1;
+    pos.z += cos(time + pos.x * 2.0) * 0.1;
+    
+    return pos;
+}
+
 
 
 vec3 createCylinder(vec3 pos, float height, float radius, vec3 offset) {
@@ -184,9 +209,7 @@ float map(float value, float a, float b, float c, float d) {
     return c + (value - a) * (d - c) / (b - a);
   }
 
-  float random(float n) {
-    return fract(sin(n) * 43758.5453123);
-}
+
 
 float random3D(vec3 pos) {
     return fract(sin(dot(pos.xyz, vec3(12.9898, 78.233, 45.5432))) * 43758.5453123);
@@ -222,6 +245,89 @@ vec3 createBlobby(vec3 pos, float radius, float noiseScale, float noiseAmount) {
     return normalized * newRadius;
 }
 
+vec3 createTorus(vec3 pos, float majorRadius, float minorRadius) {
+    // Normaliser la position
+    vec3 p = normalize(pos);
+    
+    // Convertir en coordonnées cylindriques
+    float r = length(p.xz);
+    float theta = atan(p.z, p.x);
+    
+    // Calculer la position sur le tore
+    vec3 torusPos = vec3(
+        (majorRadius + minorRadius * cos(theta)) * cos(theta),
+        minorRadius * sin(theta),
+        (majorRadius + minorRadius * cos(theta)) * sin(theta)
+    );
+    
+    return torusPos;
+}
+
+// vec3 createHourglass(float t, vec3 pos, float height, float radius, float waistRadius) {
+//     // Normaliser la position
+//     float y = pos.y;
+    
+//     // Séparer en deux cônes
+//     if (y > 0.0) {
+//         // Cône supérieur (inversé)
+//         float ratio = (height/2.0 - y) / (height/2.0);
+//         float currentRadius = mix(waistRadius, radius, ratio);
+//         vec2 xz = pos.xz;
+//         float r = length(xz);
+//         if (r > 0.0) {
+//             pos.xz *= currentRadius / r;
+//         }
+//     } else {
+//         // Cône inférieur
+//         float ratio = (y + height/2.0) / (height/2.0);
+//         float currentRadius = mix(radius, waistRadius, ratio);
+//         vec2 xz = pos.xz;
+//         float r = length(xz);
+//         if (r > 0.0) {
+//             pos.xz *= currentRadius / r;
+//         }
+//     }
+    
+//     // Ajouter un peu de mouvement pour simuler le sable
+//     float noise = curl(pos * 5.0 + t * 0.1) * 0.1;
+//     pos.xz += noise;
+    
+//     return pos;
+// }
+vec3 createTube(vec3 pos, float tubeRadius, float sectionRadius, float uRotationTorus) {
+    // Normaliser la position
+    vec3 p = normalize(pos);
+    
+    // Convertir en coordonnées polaires
+    float r = length(p.xz);
+    float theta = atan(p.z, p.x);
+    
+    // Calculer la position sur le tube
+    vec3 center = vec3(
+        tubeRadius * cos(theta),
+        0.0,
+        tubeRadius * sin(theta)
+    );
+    
+    // Calculer la position relative au centre du tube
+    vec3 toCenter = p - center;
+    
+    // Rotation autour de l'axe du tube
+    float rotationAngle = uRotationTorus * 20.0; // Vitesse de rotation
+    vec3 tangent = vec3(-sin(theta), 0.0, cos(theta)); // Direction du tube
+    vec3 rotated = rotate(toCenter, tangent, 1.0);
+    
+    // Appliquer le rayon de la section
+    rotated = normalize(rotated) * sectionRadius;
+    
+    // Position finale sur la surface du tube
+    vec3 tubePos = center + rotated;
+    
+    // Rotation finale de tout le tore autour de l'axe Z
+    tubePos = rotate(tubePos, vec3(0.0, 0.0, 1.0), uRotationTorus);
+    
+    return tubePos;
+}
 void main() {
   float t = uTime * 0.15 * uSpeed;
 
@@ -300,12 +406,18 @@ void main() {
     pos = mix(pos*0.5, pos*1.0, map(uTime, 1.0, 3.0, 0.0, 1.0));
   }
 
-    
+  
 
-  finalPos = mix(pos, cubepos, abs(sin((t+4.0)*4.0)));
+    
+  // vec3 torusPos = createTorus(pos, 1.0, 0.5); // majorRadius = 1.0, minorRadius = 0.3
+  // vec3 torusPos = createCylinder(pos, 1.0, 0.1, vec3(0.0));
+  // vec3 torusPos = createHourglass(t,pos, 1.0, 0.3, 0.3);
+  // finalPos = mix(pos, cubepos, abs(sin((t+4.0)*4.0)));
   // finalPos = pos ;
   // finalPos= pos + normalize(toMouse) * mouseInfluence;
+  vec3 tubePos = createTube(pos, 1.0, 0.1,uRotationTorus);
+    
  
 
-  gl_FragColor = vec4(finalPos, 1.0);
+  gl_FragColor = vec4(tubePos, 1.0);
 }

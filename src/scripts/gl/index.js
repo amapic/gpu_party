@@ -43,7 +43,15 @@ export default new (class {
     this.canvas = null;
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    // this.controls.enableDamping = true;
+    this.controls.enableDamping = true;
+    this.controls.minDistance = 0.1;
+    this.controls.maxDistance = 100;
+    this.controls.enablePan = true;
+    this.controls.enableRotate = true;
+    this.controls.dampingFactor = 0.05;
+    this.controls.rotateSpeed = 1.0;
+    this.controls.zoomSpeed = 1.0;
+    this.controls.panSpeed = 1.0;
 
     this.clock = new THREE.Clock();
     this.time = null;
@@ -68,21 +76,58 @@ export default new (class {
     this.mouseDisplay.style.backgroundColor = "rgba(0,0,0,0.5)";
     this.mouseDisplay.style.padding = "5px 10px";
     this.mouseDisplay.style.borderRadius = "3px";
-    document.body.appendChild(this.mouseDisplay);
+    // document.body.appendChild(this.mouseDisplay);
 
     // Configuration du zoom
     this.zoomConfig = {
-      min: 1,
-      max: 4,
-      current: 4,
+      min: 0,
+      max: 50,
+      current: 1,
       smooth: 0.1,
     };
 
     // Initialiser la caméra avec le zoom de départ
     this.camera.position.z = this.zoomConfig.current;
 
+    this.rotationTorus = 0;
+
     // Écouter le scroll
     this.setupScroll();
+
+    // Ajouter les axes
+    const axesHelper = new THREE.AxesHelper(5); // Le paramètre définit la longueur des axes
+    axesHelper.material.linewidth = 2; // Épaisseur des lignes (ne fonctionne pas sur tous les navigateurs)
+    
+    // Personnaliser les couleurs si besoin
+    const xAxisMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Rouge pour X
+    const yAxisMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); // Vert pour Y
+    const zAxisMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Bleu pour Z
+    
+    axesHelper.setColors(0xff0000, 0x00ff00, 0x0000ff);
+    
+    this.scene.add(axesHelper);
+
+    // Optionnel : Ajouter des labels pour les axes
+    const createAxisLabel = (text, position, color) => {
+        const div = document.createElement('div');
+        div.className = 'axis-label';
+        div.textContent = text;
+        div.style.position = 'absolute';
+        div.style.color = color;
+        div.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        div.style.padding = '2px 5px';
+        div.style.borderRadius = '3px';
+        div.style.fontSize = '12px';
+        div.style.fontFamily = 'monospace';
+        document.body.appendChild(div);
+        return div;
+    };
+
+    this.axisLabels = {
+        x: createAxisLabel('X', [0, 0], '#ff0000'),
+        y: createAxisLabel('Y', [0, 0], '#00ff00'),
+        z: createAxisLabel('Z', [0, 0], '#0000ff')
+    };
 
     this.init();
   }
@@ -229,6 +274,7 @@ export default new (class {
         uSharpness: { value: 2.0 },
         uSlideSpeedX: { value: this.tweaks.slideSpeedX },
         uSlideSpeedY: { value: this.tweaks.slideSpeedY },
+        uRotationTorus: { value: this.rotationTorus },
       },
     });
 
@@ -298,22 +344,33 @@ export default new (class {
     const totalScroll =
       document.documentElement.scrollHeight - window.innerHeight;
 
-    // window.addEventListener("scroll", () => {
-    //   // Convertir le scroll en valeur de zoom
-    //   const scrollRatio = window.pageYOffset / totalScroll;
-    //   const targetZoom =
-    //     this.zoomConfig.min +
-    //     (this.zoomConfig.max - this.zoomConfig.min) * scrollRatio;
+    window.addEventListener("scroll", () => {
+      // Convertir le scroll en valeur de zoom
+      const scrollRatio = window.pageYOffset / window.innerHeight;
 
-    //   // Mettre à jour la cible de zoom
-    //   this.zoomConfig.current = targetZoom;
-    // });
+      // Mapper scrollRatio de [3,5] vers [0,PI/2]
+      if (scrollRatio >= 3 && scrollRatio <= 5) {
+          this.rotationTorus = THREE.MathUtils.mapLinear(
+              scrollRatio,
+              3,          // début de l'intervalle source
+              5,          // fin de l'intervalle source
+              0,          // début de l'intervalle cible
+              15   // fin de l'intervalle cible
+          );
+      } else if (scrollRatio < 3) {
+          this.rotationTorus = 0;
+      } else if (scrollRatio > 5) {
+          this.rotationTorus = 15;
+      }
+    });
   }
 
   render() {
     this.controls.update();
 
     this.time = this.clock.getElapsedTime();
+    console.log(this.time);
+    console.log("rotation",this.rotationTorus);
 
     this.fbo.update(this.time);
 
@@ -336,6 +393,24 @@ export default new (class {
     const targetZ = this.zoomConfig.current;
     this.camera.position.z += (targetZ - currentZ) * this.zoomConfig.smooth;
     // console.log("rr");
+
+    // Mettre à jour la position des labels des axes
+    if (this.axisLabels) {
+        const updateAxisLabel = (label, position) => {
+            const vector = position.clone();
+            vector.project(this.camera);
+            
+            const x = (vector.x * .5 + .5) * window.innerWidth;
+            const y = (-(vector.y * .5) + .5) * window.innerHeight;
+            
+            label.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+        };
+
+        updateAxisLabel(this.axisLabels.x, new THREE.Vector3(6, 0, 0));
+        updateAxisLabel(this.axisLabels.y, new THREE.Vector3(0, 6, 0));
+        updateAxisLabel(this.axisLabels.z, new THREE.Vector3(0, 0, 6));
+    }
+
     this.renderer.render(this.scene, this.camera);
   }
 })();
