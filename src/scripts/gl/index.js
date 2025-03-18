@@ -26,7 +26,7 @@ export default new class {
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.setSize(store.bounds.ww, store.bounds.wh);
-    this.renderer.setClearColor(0xfff, 0);
+    this.renderer.setClearColor(0x161616, 1);
 
     this.camera = new THREE.PerspectiveCamera(
       45,
@@ -253,7 +253,7 @@ export default new class {
     });
 
     this.fullScreenQuad = new THREE.Mesh(geometry, material);
-    this.scene.add(this.fullScreenQuad);
+    // this.scene.add(this.fullScreenQuad);
   }
 
   resize() {
