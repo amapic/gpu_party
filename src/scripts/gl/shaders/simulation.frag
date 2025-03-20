@@ -3,13 +3,13 @@ uniform float uTime;
 uniform float uSpeed;
 uniform float uCurlFreq;
 uniform vec2 uMouse;
-uniform float uNumBranches;
-uniform float uBranchDepth;
-uniform float uSharpness;
-uniform float uBlobRadius;
-uniform float uBlobNoiseScale;
-uniform float uBlobNoiseAmount;
-uniform float uRotationTorus;
+// uniform float uNumBranches;
+// uniform float uBranchDepth;
+// uniform float uSharpness;
+// uniform float uBlobRadius;
+// uniform float uBlobNoiseScale;
+// uniform float uBlobNoiseAmount;
+// uniform float uRotationTorus;
 // uniform float uRotationTorus2;
 varying vec2 vUv;
 
@@ -245,23 +245,6 @@ vec3 createBlobby(vec3 pos, float radius, float noiseScale, float noiseAmount) {
     return normalized * newRadius;
 }
 
-vec3 createTorus(vec3 pos, float majorRadius, float minorRadius) {
-    // Normaliser la position
-    vec3 p = normalize(pos);
-    
-    // Convertir en coordonnées cylindriques
-    float r = length(p.xz);
-    float theta = atan(p.z, p.x);
-    
-    // Calculer la position sur le tore
-    vec3 torusPos = vec3(
-        (majorRadius + minorRadius * cos(theta)) * cos(theta),
-        minorRadius * sin(theta),
-        (majorRadius + minorRadius * cos(theta)) * sin(theta)
-    );
-    
-    return torusPos;
-}
 
 // vec3 createHourglass(float t, vec3 pos, float height, float radius, float waistRadius) {
 //     // Normaliser la position
@@ -349,75 +332,28 @@ void main() {
 
   // pos = normalize(pos);
 
-//   pos = slideOnSurface(pos, t);
-  
-  // Utiliser la fonction de combinaison
-  // pos = combineShapes(pos);
+
   pos=curl(pos * 2.0 * uCurlFreq + t);
   cubepos=curl(cubepos * 2.0 * uCurlFreq + t);
 
-  // pos += normalize(toMouse) * mouseInfluence ;
-  // cubepos += normalize(toMouse) * mouseInfluence ;
-  // pos += curl(curlPos * uCurlFreq * 2.0) * 1.0; 
-  // pos += curl(curlPos * uCurlFreq * 4.0) * 0.25; 
-  // cubepos = curl(cubepos * uCurlFreq + t);
-  // cubepos = normalize(cubepos) * length(pos);
-//   float repulsionRadius = 0.1;
-//   float repulsionStrength = 0.05;
-//   vec3 repulsion = normalize(cubepos) * repulsionStrength * 
-//                    (1.0 - smoothstep(0.0, repulsionRadius, length(cubepos)));
-//   cubepos += repulsion;
-  // curlPos = pos;
-  // cubepos = curl(cubepos * uCurlFreq + t);
-  // cubepos += curl(cubepos * uCurlFreq * 2.0) * 0.5;    // Plus haute fréquence
-  // cubepos += curl(cubepos * uCurlFreq * 4.0) * 0.25;   // Encore plus haute fréquence
-
-  // cubepos = sphereToStar(cubepos, uNumBranches, uBranchDepth, uSharpness);
-  
-  // cubepos = createDesertRose(cubepos, 10.0, 0.1, 1.0, vec3(0.0));
-  // cubepos = createFlatDisk(cubepos, 1.0, 0.1);
+ 
   cubepos = createBlobby(cubepos, 1.0, 3.0, 0.5);
-  // Move the particles here
-  // pos = rotate(pos, vec3(0.0, 0.0, 1.0), t + sin(length(pos.xy) * 2.0 + PI * 0.5) * 10.0);
-  // pos = rotate(pos, vec3(1.0, 0.0, 0.0), -t);
-  // pos.z += tan(length(length(pos.xy) * 10.0) - t) * 1.0;
-  // pos = curl(pos * uCurlFreq + t);
-
-  // curlPos = curl(curlPos * uCurlFreq + t);
-  // if you uncomment the next noise additions
-  // you'll get very pleasing flocking particles
-  // inside the bounds of a sphere
-  // curlPos += curl(curlPos * uCurlFreq * 2.0) * 0.5;
-  // curlPos += curl(curlPos * uCurlFreq * 4.0) * 0.25;
-  // curlPos += curl(curlPos * uCurlFreq * 8.0) * 0.125;
-  // curlPos += curl(pos * uCurlFreq * 16.0) * 0.0625;
-
+  
   float smoothness = 0.3;  // Plus petit = transitions plus abruptes
-//   float wave = smoothSquareWave(3.0*t, smoothness);
   if (uTime < 1.0) {
     pos = mix(pos*0.5, pos*(4.0 +3.0 *random3D(pos)), 1.0 - uTime);
   }
-
-  // float animationProgress = clamp((uTime - 1.0) / 2.0, 0.0, 1.0);
-  
-  
 
   if (uTime > 1.0 && uTime < 3.0) {
     pos = mix(pos*0.5, pos*1.0, map(uTime, 1.0, 3.0, 0.0, 1.0));
   }
 
-  
+  finalPos = mix(pos, cubepos, abs(sin((t+4.0)*4.0)));
 
-    
-  // vec3 torusPos = createTorus(pos, 1.0, 0.5); // majorRadius = 1.0, minorRadius = 0.3
-  // vec3 torusPos = createCylinder(pos, 1.0, 0.1, vec3(0.0));
-  // vec3 torusPos = createHourglass(t,pos, 1.0, 0.3, 0.3);
-  // finalPos = mix(pos, cubepos, abs(sin((t+4.0)*4.0)));
-  // finalPos = pos ;
-  // finalPos= pos + normalize(toMouse) * mouseInfluence;
-  vec3 tubePos = createTube(pos, 1.0, 0.1,uRotationTorus);
+  
+//   vec3 tubePos = createTube(pos, 1.0, 0.1,uRotationTorus);
     
  
 
-  gl_FragColor = vec4(tubePos, 1.0);
+  gl_FragColor = vec4(finalPos, 1.0);
 }

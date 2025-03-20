@@ -36,7 +36,7 @@ export const Screen6ClientsEtPartners = ({
     });
     
     const triggerAnimateCanvas2 = ScrollTrigger.create({
-      trigger: document.querySelector("#screen6"),
+      trigger: element,
       start: "top 100%",
       end: "top 100%",
       onEnter: () => {
@@ -47,7 +47,7 @@ export const Screen6ClientsEtPartners = ({
     });
 
     const triggerAnimateCanvas1 = ScrollTrigger.create({
-      trigger: document.querySelector("#screen6"),
+      trigger: element,
       start: "bottom 100%",
       end: "bottom 100%",
       onEnter: () => {

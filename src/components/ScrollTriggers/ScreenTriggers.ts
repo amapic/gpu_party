@@ -1,6 +1,5 @@
-import { MutableRefObject } from 'react';
-import { gsap } from 'gsap';
-
+import { MutableRefObject } from "react";
+import { gsap } from "gsap";
 
 // Screen 2 Triggers
 interface Screen2TriggersProps {
@@ -28,7 +27,7 @@ export const createScreen2Triggers = ({
     trigger: containerRef.current,
     start: "top center",
     end: "bottom center",
-    ease: "power2.inOut",
+    // ease: "power2.inOut",
     animation: timeline,
     onEnter: () => {
       // if (!canTrigger()) return;
@@ -63,7 +62,7 @@ export const createScreen2Triggers = ({
           yPercent: 0,
           opacity: 1,
           onComplete: () => {
-            document.body.style.overflow = "";
+            // document.body.style.overflow = "";
             setTimeout(() => {
               AnimationClipCreator.current = true;
             }, 1000);
@@ -74,26 +73,23 @@ export const createScreen2Triggers = ({
     },
   });
 
- 
-
   const mainSnap = ScrollTrigger.create({
     trigger: element,
-    start: "top bottom",    // Commence un peu avant d'atteindre screen3
-    // end: "bottom top",
-    markers: true,
+    start: "top bottom", // Commence un peu avant d'atteindre screen3
+    end: "top top",
+    // markers: true,
     snap: {
-      snapTo: [0,0.5],      // Snap uniquement au début de screen3
+      snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
       ease: "power2.inOut",
       inertia: false,
-      directional: true
+      directional: true,
     },
-
   });
 
   return {
     mainTriggerAnimLocal,
-    mainSnap
+    mainSnap,
   };
 };
 
@@ -105,7 +101,7 @@ interface Screen3TriggersProps {
 }
 
 export const createScreen3Triggers = ({
-  gsap,
+  // gsap,
   ScrollTrigger,
   setIsVisible,
 }: Screen3TriggersProps) => {
@@ -113,15 +109,15 @@ export const createScreen3Triggers = ({
 
   const mainSnap = ScrollTrigger.create({
     trigger: element,
-    start: "top top",    // Commence un peu avant d'atteindre screen3
-    end: "bottom bottom",
-    // markers: true,
+    start: "top bottom", // Commence un peu avant d'atteindre screen3
+    end: "top top",
+    markers: true,
     snap: {
-      snapTo: [0],      // Snap uniquement au début de screen3
+      snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
       ease: "power2.inOut",
       inertia: false,
-      directional: true
+      directional: true,
     },
 
   });
@@ -143,17 +139,15 @@ export const createScreen4Triggers = ({
 
   const mainSnap = ScrollTrigger.create({
     trigger: element,
-    start: "top top",    // Commence un peu avant d'atteindre screen3
-    end: "bottom bottom",
-    // markers: true,
+    start: "top bottom", // Commence un peu avant d'atteindre screen3
+    end: "top top",
     snap: {
-      snapTo: [0,1],      // Snap uniquement au début de screen3
+      snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      ease: "power2.inOut",
+      // ease: "power2.inOut",
       inertia: false,
-      directional: true
+      directional: true,
     },
-
   });
 
   return { mainSnap };
@@ -170,29 +164,20 @@ export const createScreen5Triggers = ({
   ScrollTrigger,
 }: Screen5TriggersProps) => {
   const element = document.querySelector("#screen5");
-  // const elementAfter = document.querySelector("#screen6");
-  // const elementBefore = document.querySelector("#screen4");
 
   const mainSnap = ScrollTrigger.create({
     trigger: element,
-    start: "top top",    // Commence un peu avant d'atteindre screen3
-    end: "bottom bottom",
+    start: "top bottom", // Commence un peu avant d'atteindre screen3
+    end: "top top",
     snap: {
-      snapTo: [0,1],      // Snap uniquement au début de screen3
+      snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      ease: "power2.inOut",
+      // ease: "power2.inOut",
       inertia: false,
-      directional: true
+      directional: true,
     },
-    onEnter: () => {
-      // DomUtils.disableScroll();
-    },
-    onComplete: () => {
-      // DomUtils.enableScroll();
-    }
-  });
 
-  
+  });
 
   return { mainSnap };
 };
@@ -211,16 +196,15 @@ export const createScreen6Triggers = ({
 
   const mainSnap = ScrollTrigger.create({
     trigger: element,
-    start: "top top",    // Commence un peu avant d'atteindre screen3
-    end: "bottom bottom",
+    start: "top bottom", // Commence un peu avant d'atteindre screen3
+    end: "top top",
+    markers: true,
     snap: {
-      snapTo: [0,1],      // Snap uniquement au début de screen3
+      snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      ease: "power2.inOut",
       inertia: false,
-      directional: true
+      directional: true,
     },
-
   });
 
   return { mainSnap };

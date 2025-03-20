@@ -15,19 +15,10 @@ const Screen2 = () => {
   const sectionsRef = useRef<HTMLDivElement[]>([]);
   const numbersRef = useRef<HTMLDivElement[]>([]);
   const bottomBarRef = useRef<HTMLDivElement>(null);
-  // const lastTriggerTime = useRef<number>(0);
-  // const TRIGGER_COOLDOWN = 1000;
 
   const AnimationClipCreator = useRef(false);
 
-  // const canTrigger = () => {
-  //   const now = Date.now();
-  //   if (now - lastTriggerTime.current >= TRIGGER_COOLDOWN) {
-  //     lastTriggerTime.current = now;
-  //     return true;
-  //   }
-  //   return false;
-  // };
+ 
 
   useEffect(() => {
     setIsGsapReady(true);
@@ -51,6 +42,7 @@ const Screen2 = () => {
     return () => {
  
       triggers.mainSnap.kill();
+      triggers.mainTriggerAnimLocal.kill();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [isGsapReady]);
@@ -59,7 +51,7 @@ const Screen2 = () => {
     <div
       ref={containerRef}
       id="screen2"
-      className="relative min-h-screen w-full text-white overflow-hidden z-10"
+      className="relative h-screen w-full text-white overflow-hidden z-10"
     >
       <div className="absolute top-0 left-0 w-full h-full bg-[rgb(16,16,16)]">
         <h1 className="ml-8 text-3xl xl:text-5xl mt-16 sm:mt-40 sm:mb-24 mb-6 bg-gradient-to-b from-gray-600 to-white bg-clip-text text-transparent">

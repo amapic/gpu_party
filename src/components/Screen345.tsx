@@ -65,16 +65,16 @@ export const Screen3 = React.memo(() => {
   useGSAP(() => {
     if (!isGsapReady) return;
 
-    // const triggers = createScreen3Triggers({
-    //   gsap,
-    //   ScrollTrigger,
-    //   setIsVisible,
-    // });
+    const triggers = createScreen3Triggers({
+      gsap,
+      ScrollTrigger,
+      setIsVisible,
+    });
 
     return () => {
-      // triggers.mainSnap.kill();
+      triggers.mainSnap.kill();
     };
-  }, [isGsapReady]);
+  }, []);
 
   return (
     <div

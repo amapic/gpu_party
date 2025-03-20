@@ -16,7 +16,7 @@ import fullScreenFragment from "./shaders/fullscreen.frag";
 
 import { getRandomSpherePoint } from "../utils";
 
-import GUI from "../gui";
+// import GUI from "../gui";
 
 export default new (class {
   constructor() {
@@ -65,7 +65,7 @@ export default new (class {
     this.zoomDisplay.style.left = "10px";
     this.zoomDisplay.style.color = "white";
     this.zoomDisplay.style.fontFamily = "monospace";
-    document.body.appendChild(this.zoomDisplay);
+    // document.body.appendChild(this.zoomDisplay);
 
     this.mouseDisplay = document.createElement("div");
     this.mouseDisplay.style.position = "fixed";
@@ -82,7 +82,7 @@ export default new (class {
     this.zoomConfig = {
       min: 0,
       max: 50,
-      current: 1,
+      current: 4,
       smooth: 0.1,
     };
 
@@ -119,7 +119,7 @@ export default new (class {
         div.style.borderRadius = '3px';
         div.style.fontSize = '12px';
         div.style.fontFamily = 'monospace';
-        document.body.appendChild(div);
+        // document.body.appendChild(div);
         return div;
     };
 
@@ -170,61 +170,16 @@ export default new (class {
       zoom: 0,
     };
 
-    GUI.add(this.tweaks, "pointSize", 1, 3, 0.1)
-      .name("particle size")
-      .onChange(
-        () =>
-          (this.renderMaterial.uniforms.uPointSize.value =
-            this.tweaks.pointSize)
-      );
-
-    GUI.add(this.tweaks, "speed", 0.0, 1, 0.001).onChange(
-      () => (this.simMaterial.uniforms.uSpeed.value = this.tweaks.speed)
-    );
-
-    GUI.add(this.tweaks, "curlFreq", 0, 0.6, 0.01)
-      .name("noise frequency")
-      .onChange(
-        () => (this.simMaterial.uniforms.uCurlFreq.value = this.tweaks.curlFreq)
-      );
-
-    GUI.add(this.tweaks, "opacity", 0.1, 1.0, 0.01).onChange(
-      () => (this.renderMaterial.uniforms.uOpacity.value = this.tweaks.opacity)
-    );
-
-    GUI.add(this.tweaks, "numBranches", 3, 12, 1)
-      .name("Star Branches")
-      .onChange(() => {
-        this.simMaterial.uniforms.uNumBranches.value = this.tweaks.numBranches;
-      });
-
-    GUI.add(this.tweaks, "branchDepth", 0, 1, 0.01)
-      .name("Branch Depth")
-      .onChange(() => {
-        this.simMaterial.uniforms.uBranchDepth.value = this.tweaks.branchDepth;
-      });
-
-    GUI.add(this.tweaks, "sharpness", 0.5, 100, 0.1)
-      .name("Point Sharpness")
-      .onChange(() => {
-        this.simMaterial.uniforms.uSharpness.value = this.tweaks.sharpness;
-      });
-
-    GUI.add(this.tweaks, "slideSpeedX", 0, 2, 0.1)
-      .name("Slide Speed X")
-      .onChange(() => {
-        this.simMaterial.uniforms.uSlideSpeedX.value = this.tweaks.slideSpeedX;
-      });
-
-    GUI.add(this.tweaks, "slideSpeedY", 0, 2, 0.1)
-      .name("Slide Speed Y")
-      .onChange(() => {
-        this.simMaterial.uniforms.uSlideSpeedY.value = this.tweaks.slideSpeedY;
-      });
-
-    const zoomController = GUI.add(this.tweaks, "zoom")
-      .name("Camera Zoom")
-      .listen();
+    // Appliquer directement les valeurs initiales
+    // this.renderMaterial.uniforms.uPointSize.value = this.tweaks.pointSize;
+    // this.simMaterial.uniforms.uSpeed.value = this.tweaks.speed;
+    // this.simMaterial.uniforms.uCurlFreq.value = this.tweaks.curlFreq;
+    // this.renderMaterial.uniforms.uOpacity.value = this.tweaks.opacity;
+    // this.simMaterial.uniforms.uNumBranches.value = this.tweaks.numBranches;
+    // this.simMaterial.uniforms.uBranchDepth.value = this.tweaks.branchDepth;
+    // this.simMaterial.uniforms.uSharpness.value = this.tweaks.sharpness;
+    // this.simMaterial.uniforms.uSlideSpeedX.value = this.tweaks.slideSpeedX;
+    // this.simMaterial.uniforms.uSlideSpeedY.value = this.tweaks.slideSpeedY;
   }
 
   createFBO() {
@@ -369,8 +324,8 @@ export default new (class {
     this.controls.update();
 
     this.time = this.clock.getElapsedTime();
-    console.log(this.time);
-    console.log("rotation",this.rotationTorus);
+    // console.log(this.time);
+    // console.log("rotation",this.rotationTorus);
 
     this.fbo.update(this.time);
 
@@ -392,7 +347,6 @@ export default new (class {
     const currentZ = this.camera.position.z;
     const targetZ = this.zoomConfig.current;
     this.camera.position.z += (targetZ - currentZ) * this.zoomConfig.smooth;
-    // console.log("rr");
 
     // Mettre à jour la position des labels des axes
     if (this.axisLabels) {
