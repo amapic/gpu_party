@@ -124,7 +124,6 @@ export const Hero = React.memo(() => {
         className="h-screen w-full"
       >
         <div
-          id="hero"
           className="relative w-full h-screen flex items-center justify-center z-10"
         >
           <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-[4.4fr_5.6fr] md:grid-rows-2  pb-16 w-full px-4 md:px-8 text-black">
@@ -170,7 +169,7 @@ export const Hero = React.memo(() => {
           </div>
 
           <div
-            className="z-10 absolute top-[80%]  sm:bottom-8 left-8 text-white text-[16px] font-['Prompt']"
+            className="z-10 absolute top-[80%] cursor-pointer sm:bottom-8 left-8 text-white text-[16px] font-['Prompt']"
             onClick={() => {
               const element = document.querySelector("#screen2");
               element?.scrollIntoView({ behavior: "smooth" });

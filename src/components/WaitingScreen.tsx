@@ -12,7 +12,7 @@ export const WaitingScreen = ({setSceneLoaded}: {setSceneLoaded: (sceneLoaded: b
 
   useEffect(() => {
     const startTime = Date.now();
-    const duration = 2000; // 2 secondes
+    const duration = 1500; // 2 secondes
 
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
@@ -22,7 +22,7 @@ export const WaitingScreen = ({setSceneLoaded}: {setSceneLoaded: (sceneLoaded: b
         requestAnimationFrame(updateProgress);
       } else {
         setProgress(100);
-        // setSceneLoaded(true);
+        setSceneLoaded(true);
       }
     };
 
@@ -32,7 +32,7 @@ export const WaitingScreen = ({setSceneLoaded}: {setSceneLoaded: (sceneLoaded: b
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black z-30">
       <div className="flex flex-col items-center justify-center h-full gap-4">
-        <h1 className={`compressed-text  text-white text-xl font-bold`}>B one consulting</h1>
+        <h1 className={`compressed-text  text-white text-xl font-bold`}>U consulting</h1>
         
         {/* Jauge de progression */}
         <div className="w-32 h-1 bg-black rounded-full overflow-hidden border border-white">

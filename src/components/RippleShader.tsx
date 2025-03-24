@@ -177,7 +177,7 @@ const RippleShaderFiber = ({ animate }: { animate: boolean }) => {
   return (
     <div id="ripple" className="absolute top-0 left-0 w-full h-screen" style={{ zIndex: -1 }}>
       <Canvas
-        // frameloop={animate ? "always" : "never"}
+        frameloop={animate ? "always" : "never"}
         camera={{
           position: [0, 0, 1],
           fov: 45,

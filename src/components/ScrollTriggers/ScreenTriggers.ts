@@ -81,7 +81,7 @@ export const createScreen2Triggers = ({
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      ease: "power2.inOut",
+      ease: "power2.out",
       inertia: false,
       directional: true,
     },
@@ -111,11 +111,17 @@ export const createScreen3Triggers = ({
     trigger: element,
     start: "top bottom", // Commence un peu avant d'atteindre screen3
     end: "top top",
-    markers: true,
+    // markers: true,
+    onEnter: () => {
+      // alert("onEnter");
+      setIsVisible(true);
+    },
+
+    // markers: true,
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      ease: "power2.inOut",
+      ease: "power2.out",
       inertia: false,
       directional: true,
     },
@@ -144,7 +150,7 @@ export const createScreen4Triggers = ({
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      // ease: "power2.inOut",
+      ease: "power2.out",
       inertia: false,
       directional: true,
     },
@@ -172,7 +178,7 @@ export const createScreen5Triggers = ({
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
-      // ease: "power2.inOut",
+      ease: "power2.out",
       inertia: false,
       directional: true,
     },
@@ -198,10 +204,11 @@ export const createScreen6Triggers = ({
     trigger: element,
     start: "top bottom", // Commence un peu avant d'atteindre screen3
     end: "top top",
-    markers: true,
+    // markers: true,
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
+      ease: "power2.out",
       inertia: false,
       directional: true,
     },

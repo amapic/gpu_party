@@ -3,6 +3,7 @@ uniform float uTime;
 uniform float uSpeed;
 uniform float uCurlFreq;
 uniform vec2 uMouse;
+uniform float uOscillation;  // Ajouter l'uniform
 // uniform float uNumBranches;
 // uniform float uBranchDepth;
 // uniform float uSharpness;
@@ -353,7 +354,11 @@ void main() {
   
 //   vec3 tubePos = createTube(pos, 1.0, 0.1,uRotationTorus);
     
- 
+    // float uOscillation = 0.9 ;
+
+  // Déplacer les particules horizontalement
+  float offset = mix(-2.0, 2.0, uOscillation);  // -2 à 2 unités
+  finalPos.x += offset;
 
   gl_FragColor = vec4(finalPos, 1.0);
 }

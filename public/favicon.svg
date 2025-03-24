@@ -1,0 +1,22 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+    </filter> -->
+  </defs>
+
+  <!-- Fond noir -->
+  <rect width="32" height="32" fill="black" 
+
+  />
+  
+  <!-- Cercles flous -->
+  
+
+  <!-- U majuscule blanc -->
+  <path d="M10 8 L10 18 Q10 24 16 22 Q22 24 22 18 L22 8" 
+        fill="none" 
+        stroke="white" 
+        stroke-width="3"
+        stroke-linecap="round"/>
+</svg> 

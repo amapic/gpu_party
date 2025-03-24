@@ -14,7 +14,7 @@ export default class FBO {
   }
 
   init() {
-    this.checkHardware();
+    // this.checkHardware();
     this.createTarget();
     this.simSetup();
     this.createParticles();

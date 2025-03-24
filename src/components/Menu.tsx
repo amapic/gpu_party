@@ -83,8 +83,8 @@ const Menu = () => {
     ["Introduction", "hero"],
     ["Services", "screen2"],
     ["About Us", "screen3"],
-    ["Clients & Partners", "screen6"],
-    ["Contact", "screen6"],
+    ["Clients & Partners", "screen6"]
+    // ["Contact", "screen6"],
   ];
 
   const menuContainerRef = useRef<HTMLDivElement>(null);
@@ -304,6 +304,17 @@ const Menu = () => {
     );
   }, []);
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    // alert("scrollToSection");
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <>
       <div>
@@ -320,9 +331,9 @@ const Menu = () => {
           className=" compressed-text sm:fixed text-white sm:top-6 sm:left-8 font-['Prompt'] z-20"
         >
           <span className="text-left text-xl xl:text-2xl b-compressed-text">
-            B{" "}
+            U{" "}
           </span>
-          <span className="text-xl xl:text-2xl">one consulting</span>
+          <span className="text-xl xl:text-2xl">consulting</span>
         </div>
 
         <button
@@ -368,6 +379,21 @@ const Menu = () => {
         </div>
         {/* <div ref={fakeContainerRef} className=" absolute top-0 right-0 w-full h-[200px] z-0"></div> */}
       </div>
+      {/* ["Introduction", "hero"],
+    ["Services", "screen2"],
+    ["About Us", "screen3"],
+    ["Clients & Partners", "screen6"] */}
+      {isMenuOpen && (
+        <div className="sm:hidden">
+          {/* <div className="fixed top-0 right-4 w-full h-full bg-black opacity-50 z-40"></div> */}
+          <div className="fixed text-right top-16 right-4 text-white bg-transparent z-50">
+            <h1 onClick={() => scrollToSection("hero")  }>. Introduction</h1>
+            <h1 onClick={() => scrollToSection("screen2")}>. Services</h1>
+            <h1 onClick={() => scrollToSection("screen3")}>. About Us</h1>
+            <h1 onClick={() => scrollToSection("screen6")}>. Clients</h1>
+          </div>
+        </div>
+      )}
     </>
   );
 };

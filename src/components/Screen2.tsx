@@ -102,7 +102,7 @@ const Screen2 = () => {
         <div className="absolute bottom-16 sm:p-0 w-full px-[var(--margeBodySection)] sm:px-[var(--margeBodySectionsm)]">
           <div
             ref={bottomBarRef}
-            className="bg-black border-6 mt-20 flex justify-between items-center border border-white rounded-full px-8 py-4"
+            className="bg-black border-6 mt-20 flex justify-between items-center border border-white rounded-full sm:px-8 px-4 py-4"
           >
             <div className="md:text-md xl:text-xl">OUR SERVICES</div>
             <div className="md:text-md xl:text-xl">OPEN</div>

@@ -89,168 +89,192 @@ export const Screen6ClientsEtPartners = ({
       >
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/airfrance.png"
+            loading="lazy"
+            src="/airfrance.png"
             alt="Air France"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/renault.png"
+            loading="lazy"
+            src="/renault.png"
             alt="Renault"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/total.png"
+            loading="lazy"
+            src="/total.png"
             alt="Total Energies"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/as24.png"
+            loading="lazy"
+            src="/as24.png"
             alt="AS 24"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/lcl.png"
+            loading="lazy"
+            src="/lcl.png"
             alt="LCL"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/mastercard.png"
+            loading="lazy"
+            src="/mastercard.png"
             alt="Mastercard"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/kesato.webp"
+            loading="lazy"
+            src="/kesato.webp"
             alt="Kesato"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/imani.png"
+            loading="lazy"
+            src="/imani.png"
             alt="IMANI"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/aldiwan.png"
+            loading="lazy"
+            src="/aldiwan.png"
             alt="Aldiwan"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/cafe.jpeg"
+            loading="lazy"
+            src="/cafe.jpeg"
             alt="Cafe Organic"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12p-1">
           <img
-            src="./public/ts.svg"
+            loading="lazy"
+            src="/ts.svg"
             alt="touch et sell"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/celio.png"
+            loading="lazy"
+            src="/celio.png"
             alt="celio"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/comptoir.jpeg"
+            loading="lazy"
+            src="/comptoir.jpeg"
             alt="Comptoir"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/yacht.png"
+            loading="lazy"
+            src="/yacht.png"
             alt="Yacht"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/dubai.png"
+            loading="lazy"
+            src="/dubai.png"
             alt="Dubai"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/bsi.png"
+            loading="lazy"
+            src="/bsi.png"
             alt="BSI"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/neonautica.webp"
+            loading="lazy"
+            src="/neonautica.webp"
             alt="Neonautica"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/HR.png"
+            loading="lazy"
+            src="/HR.png"
             alt="HR"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/ericbompard.png"
+            loading="lazy"
+            src="/ericbompard.png"
             alt="Eric Bompard"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/princessetam.png"
+            loading="lazy"
+            src="/princessetam.png"
             alt="Princess Etam"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/facebook.png"
+            loading="lazy"
+            src="/facebook.png"
             alt="Facebook"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/gsuite.png"
+            loading="lazy"
+            src="/gsuite.png"
             alt="GSuite"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/googleana.png"
+            loading="lazy"
+            src="/googleana.png"
             alt="Google Analytics"
             className="h-full w-auto object-contain"
           />
         </div>
         <div className="flex items-center justify-center h-full max-h-8 sm:max-h-12 p-1">
           <img
-            src="./public/miro.png"
+            loading="lazy"
+            src="/miro.png"
             alt="Miro"
             className="h-full w-auto object-contain"
           />

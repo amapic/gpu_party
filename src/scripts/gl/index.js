@@ -20,15 +20,17 @@ import { getRandomSpherePoint } from "../utils";
 
 export default new (class {
   constructor() {
-    this.renderer = new THREE.WebGL1Renderer({
-      antialias: true,
-      alpha: true,
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: false,
+      alpha: false,
       powerPreference: "default",
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.setSize(store.bounds.ww, store.bounds.wh);
-    // this.renderer.setClearColor(0x161616, 1);
-    this.renderer.setClearColor("#131313", 1);
+    this.renderer.setClearColor(
+      new THREE.Color(16 / 255, 16 / 255, 16 / 255),
+      1
+    );
 
     this.camera = new THREE.PerspectiveCamera(
       45,
@@ -42,16 +44,16 @@ export default new (class {
 
     this.canvas = null;
 
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.minDistance = 0.1;
-    this.controls.maxDistance = 100;
-    this.controls.enablePan = true;
-    this.controls.enableRotate = true;
-    this.controls.dampingFactor = 0.05;
-    this.controls.rotateSpeed = 1.0;
-    this.controls.zoomSpeed = 1.0;
-    this.controls.panSpeed = 1.0;
+    // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    // this.controls.enableDamping = true;
+    // this.controls.minDistance = 0.1;
+    // this.controls.maxDistance = 100;
+    // this.controls.enablePan = true;
+    // this.controls.enableRotate = true;
+    // this.controls.dampingFactor = 0.05;
+    // this.controls.rotateSpeed = 1.0;
+    // this.controls.zoomSpeed = 1.0;
+    // this.controls.panSpeed = 1.0;
 
     this.clock = new THREE.Clock();
     this.time = null;
@@ -97,37 +99,63 @@ export default new (class {
     // Ajouter les axes
     const axesHelper = new THREE.AxesHelper(5); // Le paramètre définit la longueur des axes
     axesHelper.material.linewidth = 2; // Épaisseur des lignes (ne fonctionne pas sur tous les navigateurs)
-    
+
     // Personnaliser les couleurs si besoin
     const xAxisMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Rouge pour X
     const yAxisMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); // Vert pour Y
     const zAxisMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Bleu pour Z
-    
+
     axesHelper.setColors(0xff0000, 0x00ff00, 0x0000ff);
-    
-    this.scene.add(axesHelper);
+
+    // this.scene.add(axesHelper);
 
     // Optionnel : Ajouter des labels pour les axes
     const createAxisLabel = (text, position, color) => {
-        const div = document.createElement('div');
-        div.className = 'axis-label';
-        div.textContent = text;
-        div.style.position = 'absolute';
-        div.style.color = color;
-        div.style.backgroundColor = 'rgba(0,0,0,0.5)';
-        div.style.padding = '2px 5px';
-        div.style.borderRadius = '3px';
-        div.style.fontSize = '12px';
-        div.style.fontFamily = 'monospace';
-        // document.body.appendChild(div);
-        return div;
+      const div = document.createElement("div");
+      div.className = "axis-label";
+      div.textContent = text;
+      div.style.position = "absolute";
+      div.style.color = color;
+      div.style.backgroundColor = "rgba(0,0,0,0.5)";
+      div.style.padding = "2px 5px";
+      div.style.borderRadius = "3px";
+      div.style.fontSize = "12px";
+      div.style.fontFamily = "monospace";
+      // document.body.appendChild(div);
+      return div;
     };
 
     this.axisLabels = {
-        x: createAxisLabel('X', [0, 0], '#ff0000'),
-        y: createAxisLabel('Y', [0, 0], '#00ff00'),
-        z: createAxisLabel('Z', [0, 0], '#0000ff')
+      x: createAxisLabel("X", [0, 0], "#ff0000"),
+      y: createAxisLabel("Y", [0, 0], "#00ff00"),
+      z: createAxisLabel("Z", [0, 0], "#0000ff"),
     };
+
+    // this.simMaterial.uniforms.uOscillation = { value: 0 };
+
+    // Ajouter une valeur cible pour le smoothing
+    this.oscillationTarget = 0.5;
+    this.currentOscillation = 0.5;
+
+    // Détecter le type d'appareil
+    this.isMobile = window.matchMedia("(max-width: 768px)").matches;
+    console.log("Is mobile:", this.isMobile);
+    // Écouter les changements de taille d'écran
+    window.matchMedia("(max-width: 768px)").addEventListener("change", (e) => {
+      this.isMobile = e.matches;
+      console.log("Is mobile:", this.isMobile);
+    });
+
+    // Ajuster les paramètres selon l'appareil
+    // if (this.isMobile) {
+    //     // Configuration pour mobile
+    //     this.camera.position.z = 20;  // Plus loin sur mobile
+    //     this.controls.enableZoom = false;  // Désactiver le zoom sur mobile
+    // } else {
+    //     // Configuration pour desktop
+    //     this.camera.position.z = 15;  // Plus proche sur desktop
+    //     this.controls.enableZoom = true;
+    // }
 
     this.init();
   }
@@ -169,17 +197,6 @@ export default new (class {
       slideSpeedY: 0,
       zoom: 0,
     };
-
-    // Appliquer directement les valeurs initiales
-    // this.renderMaterial.uniforms.uPointSize.value = this.tweaks.pointSize;
-    // this.simMaterial.uniforms.uSpeed.value = this.tweaks.speed;
-    // this.simMaterial.uniforms.uCurlFreq.value = this.tweaks.curlFreq;
-    // this.renderMaterial.uniforms.uOpacity.value = this.tweaks.opacity;
-    // this.simMaterial.uniforms.uNumBranches.value = this.tweaks.numBranches;
-    // this.simMaterial.uniforms.uBranchDepth.value = this.tweaks.branchDepth;
-    // this.simMaterial.uniforms.uSharpness.value = this.tweaks.sharpness;
-    // this.simMaterial.uniforms.uSlideSpeedX.value = this.tweaks.slideSpeedX;
-    // this.simMaterial.uniforms.uSlideSpeedY.value = this.tweaks.slideSpeedY;
   }
 
   createFBO() {
@@ -230,6 +247,7 @@ export default new (class {
         uSlideSpeedX: { value: this.tweaks.slideSpeedX },
         uSlideSpeedY: { value: this.tweaks.slideSpeedY },
         uRotationTorus: { value: this.rotationTorus },
+        uOscillation: { value: 0.5 },
       },
     });
 
@@ -302,30 +320,53 @@ export default new (class {
     window.addEventListener("scroll", () => {
       // Convertir le scroll en valeur de zoom
       const scrollRatio = window.pageYOffset / window.innerHeight;
+      console.log(scrollRatio);
 
-      // Mapper scrollRatio de [3,5] vers [0,PI/2]
-      if (scrollRatio >= 3 && scrollRatio <= 5) {
-          this.rotationTorus = THREE.MathUtils.mapLinear(
-              scrollRatio,
-              3,          // début de l'intervalle source
-              5,          // fin de l'intervalle source
-              0,          // début de l'intervalle cible
-              15   // fin de l'intervalle cible
+      if (!this.isMobile) {
+        if (scrollRatio > 2 && scrollRatio <= 5) {
+          // Calculer la valeur cible
+          this.oscillationTarget = THREE.MathUtils.mapLinear(
+            scrollRatio,
+            2,
+            5,
+            0.5,
+            0.9
           );
-      } else if (scrollRatio < 3) {
-          this.rotationTorus = 0;
-      } else if (scrollRatio > 5) {
-          this.rotationTorus = 15;
+
+          // Appliquer le smoothing
+        } else if (scrollRatio < 3) {
+        } else if (scrollRatio > 6 && scrollRatio < 7) {
+          this.oscillationTarget = THREE.MathUtils.mapLinear(
+            scrollRatio,
+            6,
+            7,
+            0.9,
+            0.1
+          );
+
+          // Appliquer le smoothing
+          // this.currentOscillation +=
+          // (this.oscillationTarget - this.currentOscillation) * 0.1; // 0.1 est la vitesse de smoothing
+
+          // Mettre à jour l'uniform
+          // this.simMaterial.uniforms.uOscillation.value = this.currentOscillation;
+        }
       }
     });
   }
 
   render() {
-    this.controls.update();
+    // this.controls.update();
 
     this.time = this.clock.getElapsedTime();
-    // console.log(this.time);
-    // console.log("rotation",this.rotationTorus);
+
+    if (Math.abs(this.oscillationTarget - this.currentOscillation) > 0.01) {
+      this.currentOscillation +=
+        (this.oscillationTarget - this.currentOscillation) * 0.1; // 0.1 est la vitesse de smoothing
+      console.log(this.currentOscillation);
+      // Mettre à jour l'uniform
+      this.simMaterial.uniforms.uOscillation.value = this.currentOscillation;
+    }
 
     this.fbo.update(this.time);
 
@@ -343,27 +384,26 @@ export default new (class {
     const mouseY = this.mouse.y.toFixed(3);
     this.mouseDisplay.textContent = `Mouse: (${mouseX}, ${mouseY})`;
 
-    // Appliquer le zoom avec smoothing
-    const currentZ = this.camera.position.z;
-    const targetZ = this.zoomConfig.current;
-    this.camera.position.z += (targetZ - currentZ) * this.zoomConfig.smooth;
-
     // Mettre à jour la position des labels des axes
     if (this.axisLabels) {
-        const updateAxisLabel = (label, position) => {
-            const vector = position.clone();
-            vector.project(this.camera);
-            
-            const x = (vector.x * .5 + .5) * window.innerWidth;
-            const y = (-(vector.y * .5) + .5) * window.innerHeight;
-            
-            label.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
-        };
+      const updateAxisLabel = (label, position) => {
+        const vector = position.clone();
+        vector.project(this.camera);
 
-        updateAxisLabel(this.axisLabels.x, new THREE.Vector3(6, 0, 0));
-        updateAxisLabel(this.axisLabels.y, new THREE.Vector3(0, 6, 0));
-        updateAxisLabel(this.axisLabels.z, new THREE.Vector3(0, 0, 6));
+        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+        const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+
+        label.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+      };
+
+      updateAxisLabel(this.axisLabels.x, new THREE.Vector3(6, 0, 0));
+      updateAxisLabel(this.axisLabels.y, new THREE.Vector3(0, 6, 0));
+      updateAxisLabel(this.axisLabels.z, new THREE.Vector3(0, 0, 6));
     }
+
+    // Créer une oscillation entre 0 et 1 basée sur le temps
+    // const oscillation = (Math.sin(this.time * 0.5) + 1) * 0.5;  // transforme -1,1 en 0,1
+    // this.simMaterial.uniforms.uOscillation.value = oscillation;
 
     this.renderer.render(this.scene, this.camera);
   }

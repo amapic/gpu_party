@@ -22,13 +22,13 @@ export const Screen3 = React.memo(() => {
   const [isGsapReady, setIsGsapReady] = useState(false);
   // const gsapModules = useRef<any>({});
 
-  useGSAP(() => {
-    setIsGsapReady(true);
-  }, []);
+  // useGSAP(() => {
+  //   // setIsGsapReady(true);
+  // }, []);
 
   useEffect(() => {
     if (isVisible) {
-      if (!isGsapReady) return;
+      // if (!isGsapReady) return;
 
       const element = document.querySelector("#screen3");
 
@@ -63,13 +63,14 @@ export const Screen3 = React.memo(() => {
   }, [val1, val2, val3, val4, isVisible, isGsapReady]);
 
   useGSAP(() => {
-    if (!isGsapReady) return;
+    // if (!isGsapReady) return;
 
     const triggers = createScreen3Triggers({
       gsap,
       ScrollTrigger,
       setIsVisible,
     });
+
 
     return () => {
       triggers.mainSnap.kill();
@@ -210,7 +211,7 @@ export const Screen5 = () => {
       className="relative w-full h-screen items-center justify-end text-white font-['Prompt']"
     >
       <div className=" lg:right-[var(--margeBodySectionsm)] px-8 text-md absolute lg:text-right  text-center w-full lg:w-1/2 top-1/3  text-white font-['Prompt'] lg:text-xl pt-3">
-        "At B One Consulting,{" "}
+        "At U Consulting,{" "}
         <span className="italic">
           {" "}
           client-centricity is our guidind principle{" "}
