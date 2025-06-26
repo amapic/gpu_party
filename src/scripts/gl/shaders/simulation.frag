@@ -340,6 +340,7 @@ void main() {
  
   cubepos = createBlobby(cubepos, 1.0, 3.0, 0.5);
   
+  
   float smoothness = 0.3;  // Plus petit = transitions plus abruptes
   if (uTime < 1.0) {
     pos = mix(pos*0.5, pos*(4.0 +3.0 *random3D(pos)), 1.0 - uTime);

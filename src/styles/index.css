@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap'); */
 
 @tailwind base;
 @tailwind components;
@@ -142,7 +142,20 @@ html, body {
   transition: color 0.3s ease;
 }
 
-.service-item::before {
+.service-item-orange::before {
+  content: '';
+  position: absolute;
+  left: -1px; /* Pour aligner avec la bordure */
+  top: 0;
+  width: 1px; /* Épaisseur de la bordure */
+  height: 100%;
+  background: linear-gradient(to bottom, #f59e0b 50%, #4b5563 50%);
+  background-size: 100% 200%;
+  background-position: 0 100%;
+  transition: background-position 0.6s ease; /* Ajuste la vitesse ici */
+}
+
+.service-item-blue::before {
   content: '';
   position: absolute;
   left: -1px; /* Pour aligner avec la bordure */
@@ -159,7 +172,18 @@ html, body {
   background-position: 0 0;
 }
 
-.gradient-text-mask {
+.gradient-text-mask-orange {
+  position: relative;
+  background: linear-gradient(to bottom, #f59e0b 50%, white 50%);
+  background-size: 100% 200%;
+  background-position: 0 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position 0.6s ease; /* Ajuste la vitesse ici */
+}
+
+.gradient-text-mask-blue {
   position: relative;
   background: linear-gradient(to bottom, #3b82f6 50%, white 50%);
   background-size: 100% 200%;
@@ -170,13 +194,13 @@ html, body {
   transition: background-position 0.6s ease; /* Ajuste la vitesse ici */
 }
 
-.gradient-text-mask .orange {
+/* .gradient-text-mask .orange {
   background: linear-gradient(to bottom, #f59e0b 50%, white 50%);
 }
 
 .gradient-text-mask .blue {
   background: linear-gradient(to bottom, #3b82f6 50%, white 50%);
-}
+} */
 
 .service-item:hover .gradient-text-mask {
   background-position: 0 0;
@@ -246,4 +270,32 @@ html, body {
   font-style: normal;
   font-weight: 600;
   src: url('/fonts/prompt-v10-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+@font-face {
+  font-family: 'Prompt';
+  src: url('/fonts/prompt-v10-latin-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Prompt';
+  src: url('/fonts/prompt-v10-latin-300.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Prompt';
+  src: url('/fonts/prompt-v10-latin-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Prompt';
+  src: url('/fonts/prompt-v10-latin-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
 }

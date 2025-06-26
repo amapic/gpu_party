@@ -1,5 +1,5 @@
 // "use client";
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 // import { getDistanceFromTop } from "@/utils/utils";
 import { useGSAP } from "@gsap/react";
@@ -10,7 +10,8 @@ const MenuItem = ({ text, id }: { text: string; id: string }) => {
   const lineRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  let element: HTMLElement | null = null;
+  const elementRef = useRef<HTMLElement | null>(null);
+  
   // Fonction pour vérifier si un élément est visible
   const isElementVisible = (element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
@@ -23,28 +24,53 @@ const MenuItem = ({ text, id }: { text: string; id: string }) => {
     );
   };
 
+  // Fonction pour essayer de trouver l'élément
+  const findElement = () => {
+    if (!elementRef.current) {
+      elementRef.current = document.getElementById(id);
+    }
+    return elementRef.current;
+  };
+
   // Exemple d'utilisation dans un useEffect
   useEffect(() => {
-    element = document.getElementById(id);
-
     const checkVisibility = () => {
+      // console.log("checkVisibility" , id);
+      const element = findElement();
       if (element) {
-        const isVisible = isElementVisible(element as HTMLElement);
+        const isVisible = isElementVisible(element);
         setIsVisible(isVisible);
       }
     };
 
+    // Essayer de trouver l'élément immédiatement
     checkVisibility();
-    window.addEventListener("scroll", checkVisibility);
+    
+    // Si l'élément n'existe pas encore, essayer périodiquement
+    const intervalId = setInterval(() => {
+      if (!findElement()) {
+        checkVisibility();
+      } else {
+        // clearInterval(intervalId);
+      }
+    }, 100);
+
+    // Nettoyer l'intervalle après 5 secondes maximum
+    // const timeoutId = setTimeout(() => {
+    //   clearInterval(intervalId);
+    // }, 5000);
+
+    window.addEventListener("scroll", checkVisibility, { passive: false });
 
     return () => {
       window.removeEventListener("scroll", checkVisibility);
+      // clearInterval(intervalId);
+      // clearTimeout(timeoutId);
     };
   }, [id]);
 
   const scrollToSection = () => {
-    const element = document.getElementById(id);
-    // alert("scrollToSection");
+    const element = findElement();
     if (element) {
       element.scrollIntoView({
         behavior: "smooth",

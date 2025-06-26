@@ -1,6 +1,6 @@
 // "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState,memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -13,45 +13,74 @@ import {
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
-export const Screen3 = React.memo(() => {
+export const Screen3 = memo(() => {
   const [val1, setVal1] = useState(0);
   const [val2, setVal2] = useState(0);
   const [val3, setVal3] = useState(0);
   const [val4, setVal4] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isGsapReady, setIsGsapReady] = useState(false);
-  // const gsapModules = useRef<any>({});
 
-  // useGSAP(() => {
-  //   // setIsGsapReady(true);
-  // }, []);
+  const debutCompteARebours = useRef(false);
 
   useEffect(() => {
     if (isVisible) {
+      let timeInterval: NodeJS.Timeout = 0;
+      let timeInterval2: NodeJS.Timeout = 0;
+      let timeInterval3: NodeJS.Timeout = 0;
+      let timeInterval4: NodeJS.Timeout = 0;
       // if (!isGsapReady) return;
 
-      const element = document.querySelector("#screen3");
+      if (!debutCompteARebours.current) {
+        debutCompteARebours.current = true;
+        setTimeout(() => {
+          const element = document.querySelector("#screen3");
 
-      if (!element) {
-        console.warn("Required elements not found");
-        return;
+          if (!element) {
+            console.warn("Required elements not found");
+            return;
+          }
+
+          timeInterval = setInterval(() => {
+            val1 < 10 && setVal1((prevCount) => prevCount + 1);
+          }, 100);
+
+          timeInterval2 = setInterval(() => {
+            val2 < 1000 && setVal2((prevCount) => prevCount + 100);
+          }, 100);
+
+          timeInterval3 = setInterval(() => {
+            val3 < 4 && setVal3((prevCount) => prevCount + 0.6);
+          }, 100);
+
+          timeInterval4 = setInterval(() => {
+            val4 < 100 && setVal4((prevCount) => prevCount + 10);
+          }, 100);
+        }, 1000);
+      } else {
+        const element = document.querySelector("#screen3");
+
+        if (!element) {
+          console.warn("Required elements not found");
+          return;
+        }
+
+        timeInterval = setInterval(() => {
+          val1 < 10 && setVal1((prevCount) => prevCount + 1);
+        }, 100);
+
+        timeInterval2 = setInterval(() => {
+          val2 < 1000 && setVal2((prevCount) => prevCount + 100);
+        }, 100);
+
+        timeInterval3 = setInterval(() => {
+          val3 < 4 && setVal3((prevCount) => prevCount + 0.6);
+        }, 100);
+
+        timeInterval4 = setInterval(() => {
+          val4 < 100 && setVal4((prevCount) => prevCount + 10);
+        }, 100);
       }
-
-      const timeInterval = setInterval(() => {
-        val1 < 10 && setVal1((prevCount) => prevCount + 1);
-      }, 100);
-
-      const timeInterval2 = setInterval(() => {
-        val2 < 1000 && setVal2((prevCount) => prevCount + 100);
-      }, 100);
-
-      const timeInterval3 = setInterval(() => {
-        val3 < 4 && setVal3((prevCount) => prevCount + 0.6);
-      }, 100);
-
-      const timeInterval4 = setInterval(() => {
-        val4 < 100 && setVal4((prevCount) => prevCount + 10);
-      }, 100);
 
       return () => {
         clearInterval(timeInterval);
@@ -71,7 +100,6 @@ export const Screen3 = React.memo(() => {
       setIsVisible,
     });
 
-
     return () => {
       triggers.mainSnap.kill();
     };
@@ -81,57 +109,56 @@ export const Screen3 = React.memo(() => {
     <div
       id="screen3"
       // className="w-full h-screen bg-orange  text-white flex items-center justify-center font-['Prompt'] z-20"
-      className="relative  sm:mx-[var(--margeBodySectionsm)]  h-screen text-white flex justify-center z-0"
+      className="relative sm:mx-[var(--margeBodySectionsm)]  h-screen text-white flex justify-center z-0"
     >
-    
-        <div className="flex w-1/3 sm:w-1/4">
-          <div className="relative w-full h-full">
-            <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
-              {" "}
-              <span className="text-4xl text-center font-bold xl:text-6xl">
-                +{val1}
-              </span>
-              <span className="pt-2  text-base text-center xl:text-2xl">
-                years experience
-              </span>
-            </div>
+      <div className="flex w-1/3 sm:w-1/4">
+        <div className="relative w-full h-full">
+          <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
+            {" "}
+            <span className="text-4xl text-center font-bold xl:text-6xl">
+              +{val1}
+            </span>
+            <span className="pt-2  text-base text-center xl:text-2xl">
+              years experience
+            </span>
           </div>
         </div>
-        <div className="flex w-1/3 sm:w-1/4">
-          <div className="relative w-full h-full">
-            <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
-              <span className="text-4xl text-center font-bold xl:text-6xl">
-                +{val2}
-              </span>
-              <span className="pt-2 text-base text-center xl:text-2xl">
-                projects
-              </span>
-            </div>
+      </div>
+      <div className="flex w-1/3 sm:w-1/4">
+        <div className="relative w-full h-full">
+          <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
+            <span className="text-4xl text-center font-bold xl:text-6xl">
+              +{val2}
+            </span>
+            <span className="pt-2 text-base text-center xl:text-2xl">
+              projects
+            </span>
           </div>
         </div>
-        <div className="flex w-1/3 sm:w-1/4">
-          <div className="relative w-full h-full">
-            <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
-              <span className="text-4xl text-center font-bold xl:text-6xl">
-                {val3.toFixed(0)}
-              </span>
-              <span className="pt-2 text-base text-center xl:text-2xl">
-                continents
-              </span>
-            </div>
+      </div>
+      <div className="flex w-1/3 sm:w-1/4">
+        <div className="relative w-full h-full">
+          <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
+            <span className="text-4xl text-center font-bold xl:text-6xl">
+              {val3.toFixed(0)}
+            </span>
+            <span className="pt-2 text-base text-center xl:text-2xl">
+              continents
+            </span>
           </div>
         </div>
-        <div className="hidden sm:flex w-1/4">
-          <div className="relative w-full h-full">
-            <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
-              <span className="text-4xl text-center font-bold xl:text-6xl">
-                {val4} %
-              </span>
-              <span className="pt-2  text-base text-center xl:text-2xl">
-                satisfied customers
-              </span>
-            </div>
+      </div>
+      <div className="hidden sm:flex w-1/4">
+        <div className="relative w-full h-full">
+          <div className="absolute top-[40%] w-full flex items-center justify-center flex-col my-auto">
+            <span className="text-4xl text-center font-bold xl:text-6xl">
+              {val4} %
+            </span>
+            <span className="pt-2  text-base text-center xl:text-2xl">
+              satisfied customers
+            </span>
           </div>
+        </div>
       </div>
     </div>
   );
@@ -163,7 +190,7 @@ export const Screen4 = () => {
       id="screen4"
       className="relative w-full h-screen text-white items-center justify-end z-0"
     >
-      <div className="text-md text-white text-center  lg:left-[var(--margeBodySectionsm)] w-full px-8 lg:text-left lg:w-1/2 lg:text-xl absolute top-1/3 lg:left-30 text-black font-['Prompt'] pt-3 z-0">
+      <div className="text-md text-white text-center  lg:left-[var(--margeBodySectionsm)] w-full px-8 lg:text-left lg:w-1/2 lg:text-xl absolute top-1/4 md:top-1/3 lg:left-30 text-black font-['Prompt'] pt-3 z-0">
         <span className="italic"> For over a decade </span>B one consulting has
         been a driving force in the business consulting leaving a lasting mark
         across <span>four continents.</span>

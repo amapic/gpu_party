@@ -1,8 +1,8 @@
 'use client'
 import { useRef, useMemo, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
-import { Vector2 } from 'three'
+// import * as THREE from 'three'
+import { Vector2,ShaderMaterial,Vector3 } from 'three'
 
 
 interface ClickPoint {
@@ -11,7 +11,7 @@ interface ClickPoint {
 }
 
 const RippleShaderMaterial = () => {
-  const materialRef = useRef<THREE.ShaderMaterial>(null)
+  const materialRef = useRef<ShaderMaterial>(null)
   const clicksRef = useRef<ClickPoint[]>(Array(10).fill(null).map(() => ({
     position: new Vector2(0, 0),
     time: 0
@@ -32,12 +32,12 @@ const RippleShaderMaterial = () => {
         uTime: { value: 0 },
         uClicks: { value: Array(10).fill().map(() => new Vector2(0, 0)) },
         uClickTimes: { value: new Float32Array(10) },
-        uColor1: { value: new THREE.Vector3(0.0, 0.0, 0.2) },
-        uColor2: { value: new THREE.Vector3(16/255, 16/255, 16/255) },
+        uColor1: { value: new Vector3(0.0, 0.0, 0.2) },
+        uColor2: { value: new Vector3(16/255, 16/255, 16/255) },
         uWaveSpeed: { value: WAVE_SPEED },
         uWaveLifetime: { value: WAVE_LIFETIME },
         uWaveSpread: { value: WAVE_SPREAD },
-        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+        uResolution: { value: new Vector2(window.innerWidth, window.innerHeight) },
         uBaseRadius: { value: 0.4 },      // Rayon du cercle central
         uHaloStep: { value: 0.5 },       // Pas de dégradé du halo (plus petit = plus doux)
       },

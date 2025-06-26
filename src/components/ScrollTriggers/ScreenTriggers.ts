@@ -1,5 +1,5 @@
-import { MutableRefObject } from "react";
-import { gsap } from "gsap";
+// import { MutableRefObject } from "react";
+// import { gsap } from "gsap";
 
 // Screen 2 Triggers
 interface Screen2TriggersProps {
@@ -27,14 +27,10 @@ export const createScreen2Triggers = ({
     trigger: containerRef.current,
     start: "top center",
     end: "bottom center",
-    // ease: "power2.inOut",
     animation: timeline,
     onEnter: () => {
-      // if (!canTrigger()) return;
       const element = document.getElementById("screen2");
       if (!element) return;
-      // document.body.style.overflow = "hidden";
-      // DomUtils.disableScroll()
       const tl2 = gsap.timeline();
 
       numbersRef.current.forEach((number) => {
@@ -62,7 +58,6 @@ export const createScreen2Triggers = ({
           yPercent: 0,
           opacity: 1,
           onComplete: () => {
-            // document.body.style.overflow = "";
             setTimeout(() => {
               AnimationClipCreator.current = true;
             }, 1000);
@@ -73,11 +68,31 @@ export const createScreen2Triggers = ({
     },
   });
 
+  const remisePositionInitiale = ScrollTrigger.create({
+    trigger: containerRef.current,
+    start: "top bottom",
+    end: "bottom bottom",
+    onEnter: () => {
+      const element = document.getElementById("screen2");
+      if (!element) return;
+
+      numbersRef.current.forEach((number) => {
+        gsap.set(number, {
+          yPercent: -100,
+          opacity: 0,
+        });
+      });
+    },
+  });
+
   const mainSnap = ScrollTrigger.create({
     trigger: element,
     start: "top bottom", // Commence un peu avant d'atteindre screen3
     end: "top top",
     // markers: true,
+    onEnter: () => {
+      // alert("onEnter");
+    },
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
@@ -90,6 +105,7 @@ export const createScreen2Triggers = ({
   return {
     mainTriggerAnimLocal,
     mainSnap,
+    remisePositionInitiale
   };
 };
 
@@ -117,7 +133,6 @@ export const createScreen3Triggers = ({
       setIsVisible(true);
     },
 
-    // markers: true,
     snap: {
       snapTo: 1, // Snap uniquement au début de screen3
       duration: 1,
@@ -125,7 +140,6 @@ export const createScreen3Triggers = ({
       inertia: false,
       directional: true,
     },
-
   });
 
   return { mainSnap };
@@ -182,7 +196,6 @@ export const createScreen5Triggers = ({
       inertia: false,
       directional: true,
     },
-
   });
 
   return { mainSnap };

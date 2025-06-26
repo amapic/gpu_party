@@ -1,4 +1,4 @@
-import * as THREE from "three-gl";
+import {WebGLRenderer,Color,PerspectiveCamera,Scene,Clock,Vector2,Vector3,LineBasicMaterial,AxesHelper,DataTexture,RGBFormat,FloatType,ShaderMaterial,AdditiveBlending,PlaneGeometry,Mesh,MathUtils} from "three-gl";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { Events } from "../events";
@@ -20,7 +20,7 @@ import { getRandomSpherePoint } from "../utils";
 
 export default new (class {
   constructor() {
-    this.renderer = new THREE.WebGLRenderer({
+    this.renderer = new WebGLRenderer({
       antialias: false,
       alpha: false,
       powerPreference: "default",
@@ -28,11 +28,11 @@ export default new (class {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.setSize(store.bounds.ww, store.bounds.wh);
     this.renderer.setClearColor(
-      new THREE.Color(16 / 255, 16 / 255, 16 / 255),
+      new Color(16 / 255, 16 / 255, 16 / 255),
       1
     );
 
-    this.camera = new THREE.PerspectiveCamera(
+    this.camera = new PerspectiveCamera(
       45,
       store.bounds.ww / store.bounds.wh,
       0.1,
@@ -40,7 +40,7 @@ export default new (class {
     );
     this.camera.position.set(0, 0, 4);
 
-    this.scene = new THREE.Scene();
+    this.scene = new Scene();
 
     this.canvas = null;
 
@@ -55,11 +55,11 @@ export default new (class {
     // this.controls.zoomSpeed = 1.0;
     // this.controls.panSpeed = 1.0;
 
-    this.clock = new THREE.Clock();
+    this.clock = new Clock();
     this.time = null;
 
-    this.mouse = new THREE.Vector2(0, 0);
-    this.mouseTarget = new THREE.Vector2(0, 0);
+    this.mouse = new Vector2(0, 0);
+    this.mouseTarget = new Vector2(0, 0);
 
     this.zoomDisplay = document.createElement("div");
     this.zoomDisplay.style.position = "fixed";
@@ -97,13 +97,13 @@ export default new (class {
     this.setupScroll();
 
     // Ajouter les axes
-    const axesHelper = new THREE.AxesHelper(5); // Le paramètre définit la longueur des axes
+    const axesHelper = new AxesHelper(5); // Le paramètre définit la longueur des axes
     axesHelper.material.linewidth = 2; // Épaisseur des lignes (ne fonctionne pas sur tous les navigateurs)
 
     // Personnaliser les couleurs si besoin
-    const xAxisMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Rouge pour X
-    const yAxisMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); // Vert pour Y
-    const zAxisMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Bleu pour Z
+    const xAxisMaterial = new LineBasicMaterial({ color: 0xff0000 }); // Rouge pour X
+    const yAxisMaterial = new LineBasicMaterial({ color: 0x00ff00 }); // Vert pour Y
+    const zAxisMaterial = new LineBasicMaterial({ color: 0x0000ff }); // Bleu pour Z
 
     axesHelper.setColors(0xff0000, 0x00ff00, 0x0000ff);
 
@@ -139,11 +139,11 @@ export default new (class {
 
     // Détecter le type d'appareil
     this.isMobile = window.matchMedia("(max-width: 768px)").matches;
-    console.log("Is mobile:", this.isMobile);
+    // console.log("Is mobile:", this.isMobile);
     // Écouter les changements de taille d'écran
     window.matchMedia("(max-width: 768px)").addEventListener("change", (e) => {
       this.isMobile = e.matches;
-      console.log("Is mobile:", this.isMobile);
+      // console.log("Is mobile:", this.isMobile);
     });
 
     // Ajuster les paramètres selon l'appareil
@@ -222,17 +222,17 @@ export default new (class {
     }
 
     // Convert the data to a FloatTexture
-    const positions = new THREE.DataTexture(
+    const positions = new DataTexture(
       data,
       width,
       height,
-      THREE.RGBFormat,
-      THREE.FloatType
+      RGBFormat,
+      FloatType
     );
     positions.needsUpdate = true;
 
     // Simulation shader material used to update the particles' positions
-    this.simMaterial = new THREE.ShaderMaterial({
+    this.simMaterial = new ShaderMaterial({
       vertexShader: simVertex,
       fragmentShader: simFragment,
       uniforms: {
@@ -253,7 +253,7 @@ export default new (class {
 
     // Render shader material to display the particles on screen
     // the positions uniform will be set after the this.fbo.update() call
-    this.renderMaterial = new THREE.ShaderMaterial({
+    this.renderMaterial = new ShaderMaterial({
       vertexShader: particlesVertex,
       fragmentShader: particlesFragment,
       uniforms: {
@@ -264,7 +264,7 @@ export default new (class {
         uMouse: { value: this.mouse },
       },
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: AdditiveBlending,
     });
 
     // Initialize the FBO
@@ -280,22 +280,22 @@ export default new (class {
   }
 
   createScreenQuad() {
-    const geometry = new THREE.PlaneGeometry(4, 4);
-    const material = new THREE.ShaderMaterial({
+    const geometry = new PlaneGeometry(4, 4);
+    const material = new ShaderMaterial({
       vertexShader: fullScreenVertex,
       fragmentShader: fullScreenFragment,
       uniforms: {
         uTime: { value: 0 },
         uResolution: {
-          value: new THREE.Vector2(store.bounds.ww, store.bounds.wh),
+          value: new Vector2(store.bounds.ww, store.bounds.wh),
         },
         uMouse: { value: this.mouse },
       },
       depthTest: false,
-      blending: THREE.AdditiveBlending,
+      blending: AdditiveBlending,
     });
 
-    this.fullScreenQuad = new THREE.Mesh(geometry, material);
+    this.fullScreenQuad = new Mesh(geometry, material);
     // this.scene.add(this.fullScreenQuad);
   }
 
@@ -320,12 +320,11 @@ export default new (class {
     window.addEventListener("scroll", () => {
       // Convertir le scroll en valeur de zoom
       const scrollRatio = window.pageYOffset / window.innerHeight;
-      console.log(scrollRatio);
 
       if (!this.isMobile) {
         if (scrollRatio > 2 && scrollRatio <= 5) {
           // Calculer la valeur cible
-          this.oscillationTarget = THREE.MathUtils.mapLinear(
+          this.oscillationTarget = MathUtils.mapLinear(
             scrollRatio,
             2,
             5,
@@ -336,7 +335,7 @@ export default new (class {
           // Appliquer le smoothing
         } else if (scrollRatio < 3) {
         } else if (scrollRatio > 6 && scrollRatio < 7) {
-          this.oscillationTarget = THREE.MathUtils.mapLinear(
+          this.oscillationTarget = MathUtils.mapLinear(
             scrollRatio,
             6,
             7,
@@ -358,12 +357,13 @@ export default new (class {
   render() {
     // this.controls.update();
 
-    this.time = this.clock.getElapsedTime();
+    // if (this.clock.getElapsedTime() > 2) {
+      this.time = this.clock.getElapsedTime();
+    // }
 
     if (Math.abs(this.oscillationTarget - this.currentOscillation) > 0.01) {
       this.currentOscillation +=
         (this.oscillationTarget - this.currentOscillation) * 0.1; // 0.1 est la vitesse de smoothing
-      console.log(this.currentOscillation);
       // Mettre à jour l'uniform
       this.simMaterial.uniforms.uOscillation.value = this.currentOscillation;
     }
@@ -396,9 +396,9 @@ export default new (class {
         label.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
       };
 
-      updateAxisLabel(this.axisLabels.x, new THREE.Vector3(6, 0, 0));
-      updateAxisLabel(this.axisLabels.y, new THREE.Vector3(0, 6, 0));
-      updateAxisLabel(this.axisLabels.z, new THREE.Vector3(0, 0, 6));
+      updateAxisLabel(this.axisLabels.x, new Vector3(6, 0, 0));
+      updateAxisLabel(this.axisLabels.y, new Vector3(0, 6, 0));
+      updateAxisLabel(this.axisLabels.z, new Vector3(0, 0, 6));
     }
 
     // Créer une oscillation entre 0 et 1 basée sur le temps

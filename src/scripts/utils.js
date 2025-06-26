@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import {Vector3} from 'three';
 
 // Randomly positions points on a sphere
 export function getRandomSpherePoint() {
@@ -15,7 +15,7 @@ export function getRandomSpherePoint() {
   const sinPhi = Math.sin(phi);
   const cosPhi = Math.cos(phi);
 
-  const vector = new THREE.Vector3();
+  const vector = new Vector3();
 
   vector.x = r * sinPhi * cosTheta;
   vector.y = r * sinPhi * sinTheta;

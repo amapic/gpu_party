@@ -1,5 +1,5 @@
-import * as THREE from "three";
-
+import {FloatType,RGBAFormat,NearestFilter,Scene,OrthographicCamera,WebGLRenderTarget,BufferGeometry,BufferAttribute,Mesh,Points} from "three-gl";
+// import * as THREE from "three-gl";
 export default class FBO {
   constructor(width, height, renderer, simulationMaterial, renderMaterial) {
     this.width = width;
@@ -36,8 +36,8 @@ export default class FBO {
 
   createTarget() {
     // Render target's scene and camera
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(
+    this.scene = new Scene();
+    this.camera = new OrthographicCamera(
       -1,
       1,
       1,
@@ -47,21 +47,21 @@ export default class FBO {
     );
 
     // Create a render target texture
-    this.rtt = new THREE.WebGLRenderTarget(this.width, this.height, {
-      minFilter: THREE.NearestFilter, // Important because we want to sample square pixels
-      magFilter: THREE.NearestFilter,
-      format: THREE.RGBAFormat, // Or RGBAFormat instead (to have a color for each particle, for example)
-      type: THREE.FloatType, // Important because we need precise coordinates (not ints)
+    this.rtt = new WebGLRenderTarget(this.width, this.height, {
+      minFilter: NearestFilter, // Important because we want to sample square pixels
+      magFilter: NearestFilter,
+      format: RGBAFormat, // Or RGBAFormat instead (to have a color for each particle, for example)
+      type: FloatType, // Important because we need precise coordinates (not ints)
     });
   }
 
   simSetup() {
     // Simulation
     // Create a bi-unit quadrilateral that uses the simulation material to update the float texture
-    const geometry = new THREE.BufferGeometry();
+    const geometry = new BufferGeometry();
     geometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(
+      new BufferAttribute(
         new Float32Array([
           -1, -1, 0, 1, -1, 0, 1, 1, 0,
 
@@ -73,7 +73,7 @@ export default class FBO {
 
     geometry.setAttribute(
       "uv",
-      new THREE.BufferAttribute(
+      new BufferAttribute(
         new Float32Array([
           0, 1, 1, 1, 1, 0,
 
@@ -83,7 +83,7 @@ export default class FBO {
       )
     );
 
-    this.mesh = new THREE.Mesh(geometry, this.simulationMaterial);
+    this.mesh = new Mesh(geometry, this.simulationMaterial);
 
     this.scene.add(this.mesh);
   }
@@ -106,14 +106,14 @@ export default class FBO {
     }
 
     // Create the particles geometry
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+    const geometry = new BufferGeometry();
+    geometry.setAttribute("position", new BufferAttribute(vertices, 3));
 
     // colors
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors_data, 3));
+    geometry.setAttribute("color", new BufferAttribute(colors_data, 3));
 
     // The renderMaterial is used to render the particles
-    this.particles = new THREE.Points(geometry, this.renderMaterial);
+    this.particles = new Points(geometry, this.renderMaterial);
   }
 
   update(time) {

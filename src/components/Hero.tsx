@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import  { useRef,memo } from "react";
+import  gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 // import { DomUtils } from "@/utils/utils";
 
 gsap.registerPlugin(useGSAP);
 
-export const Hero = React.memo(() => {
+export const Hero = memo(() => {
   const textRefMid1 = useRef(null);
   const textRefMid2 = useRef(null);
   const textRefgauche1 = useRef(null);

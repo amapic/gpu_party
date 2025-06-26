@@ -10,12 +10,13 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Screen2 = () => {
   const [isGsapReady, setIsGsapReady] = useState(false);
-  const gsapModules = useRef<any>({});
+  // const gsapModules = useRef<any>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionsRef = useRef<HTMLDivElement[]>([]);
   const numbersRef = useRef<HTMLDivElement[]>([]);
   const bottomBarRef = useRef<HTMLDivElement>(null);
 
+  //gère si le hover est fini sur les autre chiffres
   const AnimationClipCreator = useRef(false);
 
  
@@ -43,6 +44,7 @@ const Screen2 = () => {
  
       triggers.mainSnap.kill();
       triggers.mainTriggerAnimLocal.kill();
+      triggers.remisePositionInitiale.kill();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [isGsapReady]);
@@ -54,7 +56,7 @@ const Screen2 = () => {
       className="relative h-screen w-full text-white overflow-hidden z-10"
     >
       <div className="absolute top-0 left-0 w-full h-full bg-[rgb(16,16,16)]">
-        <h1 className="ml-8 text-3xl xl:text-5xl mt-16 sm:mt-40 sm:mb-24 mb-6 bg-gradient-to-b from-gray-600 to-white bg-clip-text text-transparent">
+        <h1 className="ml-8 mt-28 text-3xl xl:text-5xl lg:mt-16 mb-6  bg-gradient-to-b from-gray-600 to-white bg-clip-text text-transparent">
           360° SERVICES
         </h1>
 
@@ -70,14 +72,17 @@ const Screen2 = () => {
               ref={(el) => {
                 if (el) sectionsRef.current[index] = el;
               }}
-              className="service-item border-l-3 border-white sm:pl-6 sm:pr-4"
+              className={`${
+                index % 2 === 0 ? "service-item-blue" : "service-item-orange"
+              } cursor-pointer service-item border-l-3 border-white sm:pl-6 sm:pr-4`}
             >
               <div
                 ref={(el) => {
                   if (el) numbersRef.current[index] = el;
                 }}
                 className={`${
-                  AnimationClipCreator.current ? "gradient-text-mask" : ""
+                  // AnimationClipCreator.current ? "gradient-text-mask" : ""
+                  index % 2 === 0 ? "gradient-text-mask gradient-text-mask-blue" : "gradient-text-mask gradient-text-mask-orange"
                 } text-center text-[5rem] sm:text-[3rem] md:text-[8rem] text-[12rem] sm:mb-8 mb-4`}
               >
                 {String(index + 1).padStart(2, "0")}
@@ -85,7 +90,8 @@ const Screen2 = () => {
 
               <div
                 className={` ${
-                  AnimationClipCreator.current ? "gradient-text-mask" : ""
+                  // AnimationClipCreator.current ? "gradient-text-mask" : ""
+                  index % 2 === 0 ? "gradient-text-mask gradient-text-mask-blue" : "gradient-text-mask gradient-text-mask-orange"
                 } text-center sm:text-left md:text-lg lg:text-xl xl:text-3xl text-ellipsis overflow-hidden`}
               >
                 {service.split(" & ").map((line, i) => (
@@ -99,7 +105,7 @@ const Screen2 = () => {
           ))}
         </div>
 
-        <div className="absolute bottom-16 sm:p-0 w-full px-[var(--margeBodySection)] sm:px-[var(--margeBodySectionsm)]">
+        <div className="absolute bottom-2 sm:bottom-8 sm:p-0 w-full px-[var(--margeBodySection)] sm:px-[var(--margeBodySectionsm)]">
           <div
             ref={bottomBarRef}
             className="bg-black border-6 mt-20 flex justify-between items-center border border-white rounded-full sm:px-8 px-4 py-4"
