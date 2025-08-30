@@ -15,7 +15,7 @@ import { useRef, useState, useEffect } from "react";
 // const AppHero = memo(Hero);
 import { WaitingScreen } from "./WaitingScreen";
 
-import "../styles/index.css";
+// import "../styles/index.css";
 
 // Lazy load Screen6
 const Screen6 = lazy(() => import("./Screen6"));

@@ -1,5 +1,5 @@
 import {WebGLRenderer,Color,PerspectiveCamera,Scene,Clock,Vector2,Vector3,LineBasicMaterial,AxesHelper,DataTexture,RGBFormat,FloatType,ShaderMaterial,AdditiveBlending,PlaneGeometry,Mesh,MathUtils} from "three-gl";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { Events } from "../events";
 
@@ -322,19 +322,21 @@ export default new (class {
       const scrollRatio = window.pageYOffset / window.innerHeight;
 
       if (!this.isMobile) {
-        if (scrollRatio > 2 && scrollRatio <= 5) {
+        // console.log("scrollRatio", scrollRatio,this.oscillationTarget);
+        if (scrollRatio > 2 && scrollRatio <= 6) {
           // Calculer la valeur cible
           this.oscillationTarget = MathUtils.mapLinear(
             scrollRatio,
             2,
-            5,
+            6,
             0.5,
             0.9
           );
+          
 
           // Appliquer le smoothing
-        } else if (scrollRatio < 3) {
-        } else if (scrollRatio > 6 && scrollRatio < 7) {
+        }  else if (scrollRatio > 6 && scrollRatio < 7) {
+          
           this.oscillationTarget = MathUtils.mapLinear(
             scrollRatio,
             6,
@@ -342,6 +344,7 @@ export default new (class {
             0.9,
             0.1
           );
+          
 
           // Appliquer le smoothing
           // this.currentOscillation +=
@@ -401,9 +404,7 @@ export default new (class {
       updateAxisLabel(this.axisLabels.z, new Vector3(0, 0, 6));
     }
 
-    // Créer une oscillation entre 0 et 1 basée sur le temps
-    // const oscillation = (Math.sin(this.time * 0.5) + 1) * 0.5;  // transforme -1,1 en 0,1
-    // this.simMaterial.uniforms.uOscillation.value = oscillation;
+
 
     this.renderer.render(this.scene, this.camera);
   }

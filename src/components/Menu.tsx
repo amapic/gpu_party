@@ -79,11 +79,21 @@ const MenuItem = ({ text, id }: { text: string; id: string }) => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      scrollToSection();
+    }
+  };
+
   return (
-    <div
+    <button
       data-submenu
-      className="flex items-center cursor-pointer group z-10"
+      className="flex items-center cursor-pointer group z-10 bg-transparent border-none p-0"
       onClick={scrollToSection}
+      onKeyDown={handleKeyDown}
+      aria-label={`Aller à la section ${text}`}
+      tabIndex={0}
     >
       <div
         ref={textRef}
@@ -98,7 +108,7 @@ const MenuItem = ({ text, id }: { text: string; id: string }) => {
           isVisible ? "bg-white" : "bg-[rgb(50,50,50)]"
         } w-[24px] cursor-pointer z-10 transition-colors duration-200`}
       />
-    </div>
+    </button>
   );
 };
 
@@ -365,6 +375,7 @@ const Menu = () => {
         <button
           ref={helloRef}
           className="px-2 z-20 sm:w-48 text-[0.8rem] sm:text-md sm:fixed sm:top-8 sm:right-10 border border-purple text-purple rounded-full"
+          aria-label="Nous contacter"
         >
           SAY HELLO
         </button>
@@ -373,21 +384,26 @@ const Menu = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className=" flex flex-col justify-center items-center w-10 h-10 space-y-2 z-50"
+            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={isMenuOpen}
           >
             <span
               className={`block w-8 h-0.5 bg-purple transition-transform duration-300 ${
                 isMenuOpen ? "rotate-45 translate-y-2.5" : ""
               }`}
+              aria-hidden="true"
             ></span>
             <span
               className={`block w-8 h-0.5 bg-purple transition-opacity duration-300 ${
                 isMenuOpen ? "opacity-0" : ""
               }`}
+              aria-hidden="true"
             ></span>
             <span
               className={`block w-8 h-0.5 bg-purple transition-transform duration-300 ${
                 isMenuOpen ? "-rotate-45 -translate-y-2.5" : ""
               }`}
+              aria-hidden="true"
             ></span>
           </button>
 
@@ -413,10 +429,34 @@ const Menu = () => {
         <div className="sm:hidden">
           {/* <div className="fixed top-0 right-4 w-full h-full bg-black opacity-50 z-40"></div> */}
           <div className="fixed text-right top-16 right-4 text-white bg-transparent z-50">
-            <h1 onClick={() => scrollToSection("hero")  }>. Introduction</h1>
-            <h1 onClick={() => scrollToSection("screen2")}>. Services</h1>
-            <h1 onClick={() => scrollToSection("screen3")}>. About Us</h1>
-            <h1 onClick={() => scrollToSection("screen6")}>. Clients</h1>
+            <button
+              onClick={() => scrollToSection("hero")}
+              className="text-white bg-transparent border-none p-0 text-right block w-full"
+              aria-label="Aller à la section Introduction"
+            >
+              . Introduction
+            </button>
+            <button
+              onClick={() => scrollToSection("screen2")}
+              className="text-white bg-transparent border-none p-0 text-right block w-full"
+              aria-label="Aller à la section Services"
+            >
+              . Services
+            </button>
+            <button
+              onClick={() => scrollToSection("screen3")}
+              className="text-white bg-transparent border-none p-0 text-right block w-full"
+              aria-label="Aller à la section About Us"
+            >
+              . About Us
+            </button>
+            <button
+              onClick={() => scrollToSection("screen6")}
+              className="text-white bg-transparent border-none p-0 text-right block w-full"
+              aria-label="Aller à la section Clients"
+            >
+              . Clients
+            </button>
           </div>
         </div>
       )}

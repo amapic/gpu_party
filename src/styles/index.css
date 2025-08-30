@@ -241,61 +241,54 @@ html, body {
 
 /* prompt-300 - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-display: swap;
   font-family: 'Prompt';
   font-style: normal;
   font-weight: 300;
-  src: url('/fonts/prompt-v10-latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('/fonts/prompt-v10-latin-300.woff2') format('woff2');
 }
+
 /* prompt-regular - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-display: swap;
   font-family: 'Prompt';
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/prompt-v10-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('/fonts/prompt-v10-latin-regular.woff2') format('woff2');
 }
+
 /* prompt-500 - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-display: swap;
   font-family: 'Prompt';
   font-style: normal;
   font-weight: 500;
-  src: url('/fonts/prompt-v10-latin-500.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('/fonts/prompt-v10-latin-500.woff2') format('woff2');
 }
+
 /* prompt-600 - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-display: swap;
   font-family: 'Prompt';
   font-style: normal;
   font-weight: 600;
-  src: url('/fonts/prompt-v10-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-
-@font-face {
-  font-family: 'Prompt';
-  src: url('/fonts/prompt-v10-latin-regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Prompt';
-  src: url('/fonts/prompt-v10-latin-300.woff2') format('woff2');
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Prompt';
-  src: url('/fonts/prompt-v10-latin-500.woff2') format('woff2');
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Prompt';
   src: url('/fonts/prompt-v10-latin-600.woff2') format('woff2');
-  font-weight: 600;
+}
+
+/* prompt-100 (thin) - fallback vers 300 */
+@font-face {
   font-display: swap;
+  font-family: 'Prompt';
+  font-style: normal;
+  font-weight: 100;
+  src: url('/fonts/prompt-v10-latin-300.woff2') format('woff2');
+}
+
+/* prompt-700 (bold) - fallback vers 600 */
+@font-face {
+  font-display: swap;
+  font-family: 'Prompt';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/prompt-v10-latin-600.woff2') format('woff2');
 }
